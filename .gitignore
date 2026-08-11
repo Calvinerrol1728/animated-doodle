@@ -1,0 +1,6 @@
+# Python
+__pycache__/
+*.pyc
+
+# Scratch build artifacts
+preview_*.pdf
