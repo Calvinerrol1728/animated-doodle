@@ -135,3 +135,53 @@ cover is 8.5 × 11 (1.29:1), so it needs re-cropping or extending — do not sim
 This is general production guidance, not legal advice. Copyright registration, ISBN
 purchase, and trade-dress questions are worth a professional's time if you plan to sell at
 volume.
+
+---
+
+# Kindle ebook
+
+| File | What it is |
+|---|---|
+| `kindle/kindle_cover_1600x2560.jpg` | Ebook cover, exactly 1600 × 2560 px (1.6:1) |
+| `kindle/princess_elara_kindle.epub` | Fixed-layout EPUB 3, 15 pages |
+
+Rebuild both with `python3 build_kindle.py`.
+
+## Why fixed layout
+
+This is a picture book — the words are painted into the artwork. A normal reflowable
+ebook would let text resize and rewrap independently of the images, which would break
+every page. The EPUB is therefore declared `pre-paginated` (fixed layout), so each page
+displays exactly as drawn, on every device.
+
+## Verified
+
+- ✅ Cover exactly **1600 × 2560 px**, ratio **1.6000** (Amazon's spec)
+- ✅ Cover is a genuine tall composition, not a stretched or letterboxed print cover
+- ✅ EPUB 3, `mimetype` first and uncompressed (the usual cause of rejected EPUBs)
+- ✅ `pre-paginated` + `portrait` rendition properties set
+- ✅ Cover flagged with `properties="cover-image"`
+- ✅ All 15 pages in the manifest, spine, and table of contents
+- ✅ Every manifest and image reference resolves
+- ✅ Opens and renders in a real reader engine
+- ✅ 7.2 MB
+
+## Uploading to KDP
+
+1. Create a **new Kindle eBook** title (separate from the paperback — you can link them
+   later as the same book on the product page).
+2. Upload `princess_elara_kindle.epub` as the manuscript.
+3. Upload `kindle_cover_1600x2560.jpg` as the cover.
+4. Answer **yes** to the AI-content question for images.
+5. Open **Kindle Previewer** (KDP provides it free) and page through the whole book. For
+   fixed-layout children's books, check it on both a tablet profile and a phone profile.
+6. In KDP's settings, children's picture books should have **"Reading age"** set and
+   Kindle Kids' Book Creator features are optional — the EPUB already carries the
+   fixed-layout flags those tools would add.
+
+### Note on royalties
+
+Fixed-layout picture books are large files. KDP's 70% royalty option subtracts a
+**delivery fee based on file size**; the 35% option does not. For a 7 MB illustrated
+book, run both options through KDP's royalty calculator before choosing — 35% sometimes
+nets more for image-heavy children's books.

@@ -109,3 +109,9 @@ and IngramSpark. Build them with `python3 build_print.py`.
 re-run `python3 build_print.py`. The files currently print `[YOUR NAME]`.
 
 See [`PUBLISHING.md`](PUBLISHING.md) for verified specs, page order, and upload steps.
+
+## Kindle
+
+`kindle/princess_elara_kindle.epub` (fixed-layout EPUB 3) and
+`kindle/kindle_cover_1600x2560.jpg` (Amazon ebook cover). Build with
+`python3 build_kindle.py`. See [`PUBLISHING.md`](PUBLISHING.md).
