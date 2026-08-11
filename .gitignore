@@ -5,4 +5,6 @@ __pycache__/
 # Scratch build artifacts
 preview_*.pdf
 print/.tmp/
-download/
+
+# keep download/ tracked so the download page survives sandbox resets
+download/.tmp/
