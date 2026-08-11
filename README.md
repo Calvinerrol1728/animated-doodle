@@ -96,3 +96,16 @@ selling, you would still need:
 
 Illustrations were generated with AI and each page's text was proofread against
 `STORY.md` word for word.
+
+---
+
+## Print-ready files
+
+`print/interior_print_bleed.pdf` (24pp, 8.75 × 11.25 in with 0.125 in bleed) and
+`print/cover_wrap_print.pdf` (full wrap, 17.3663 × 11.25 in) are ready for Amazon KDP
+and IngramSpark. Build them with `python3 build_print.py`.
+
+**Edit `AUTHOR`, `PUBLISHER`, `YEAR`, `ISBN` and `DEDICATION` at the top of
+`build_print.py` before uploading** — the files currently print `[YOUR NAME]`.
+
+See [`PUBLISHING.md`](PUBLISHING.md) for verified specs, page order, and upload steps.
