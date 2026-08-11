@@ -147,18 +147,66 @@ homeschool
 
 ---
 
-## 6. Suggested pricing
+## 6. Pricing — what to actually charge
 
-| Strategy | Price | Notes |
+**Short answer: $9.99 for the book alone, with a $19.99 bundle tier next to it.**
+
+### What the market actually shows
+
+Comparable illustrated children's story PDFs on Etsy sell in a **$2.99–$7.99** band, with
+a handful of higher-quality single titles at **$4.99–$9.99**. Bundles and multi-story
+packs reach $12–$25. Bare PLR/resale junk sits at $1–$3 — that is the floor you must not
+be confused with.
+
+You will also read advice that "$30–49 converts best on Gumroad." **Ignore it for this
+product.** That statistic comes from business, software, and course listings bought by
+professionals expensing a purchase. A parent buying a bedtime story is a consumer paying
+out of pocket, and consumer children's content is anchored hard by Etsy and by $4–8
+paperbacks. A $39 children's PDF simply will not sell.
+
+### What you keep per sale
+
+Gumroad takes 10% flat plus 2.9% + $0.30 processing:
+
+| Price | You net | Sales needed for $500 |
 |---|---|---|
-| Impulse buy | **$4.99** | Highest volume; easy yes for a parent |
-| Standard | **$7.99** | Recommended starting point for 15 illustrated pages |
-| Premium bundle | **$12.99** | Justified if you add the printable image pack + questions |
+| $4.99 | $4.05 | 124 |
+| $7.99 | $6.66 | 75 |
+| **$9.99** | **$8.40** | **60** |
+| $14.99 | $12.76 | 39 |
 
-Consider Gumroad's **"pay what you want"** with a $4.99 minimum — for children's
-products, some buyers pay above the floor, and it lowers the barrier for the rest.
+Notice how brutal the low end is: at $2.99 you net $2.30, and that $0.30 fixed fee eats
+**10% of the sale price**. Cheap pricing is punished disproportionately on Gumroad.
 
----
+### Recommended structure — two tiers
+
+| Tier | Price | Contents |
+|---|---|---|
+| **Storybook** | **$9.99** | 15-page PDF + the 15 page images |
+| **Storybook + Print Pack** | **$19.99** | Adds the print-ready interior, the wrap cover, the EPUB, and the discussion questions as a separate printable |
+
+Two tiers reliably outperform one. The higher tier does real work even when few people
+buy it: it makes $9.99 look like the sensible, modest choice instead of the expensive
+one. Most buyers pick the middle/lower option — that is the point.
+
+### Why $9.99 and not $4.99
+
+- You are not selling a PLR bundle. It is an original story with consistent,
+  professionally typeset artwork — priced at $3 you get mistaken for the junk tier.
+- Under $10 still reads as an easy impulse purchase to a parent.
+- $9.99 leaves room to *discount to $6.99* for launches and holidays. Starting at $4.99
+  leaves you nowhere to go but down.
+- You need only **60 sales to clear $500**, versus 124 at $4.99.
+
+### If it does not sell
+
+Do not cut the price first. In order: improve the preview images, then the description,
+then the title keywords. Price is the *last* thing to change, because dropping it is easy
+and raising it later is nearly impossible.
+
+Launch tactic worth using: run **$6.99 as an intro price for the first week**, with the
+$9.99 shown as the regular price. Urgency converts better than a permanently low price,
+and it gets you those first few reviews.
 
 ## 7. Launch checklist
 
@@ -168,7 +216,7 @@ products, some buyers pay above the floor, and it lowers the barrier for the res
 - [ ] Paste the title, summary, and description above
 - [ ] Add the tags
 - [ ] Attach the product files (PDF + image ZIP)
-- [ ] Set the price
+- [ ] Set the price ($9.99 recommended; $6.99 intro for week one)
 - [ ] Turn on **"Generate a receipt PDF"** so buyers get a clean confirmation
 - [ ] Buy your own product once with a 100% discount code to test the whole flow
 
