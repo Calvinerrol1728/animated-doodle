@@ -1,0 +1,26 @@
+# ============================================================
+#  YOUR BOOK DETAILS
+#  Edit the lines below, save the file, then run:  python3 build_print.py
+#  Anything after a #  is a note to you and is ignored.
+# ============================================================
+
+
+# Your name, exactly as you want it printed on the title page.
+author = [YOUR NAME]
+
+
+# Your publishing name / imprint. Made-up names are fine ("Moonpath Books").
+# Leave it empty if you don't want one printed.
+publisher = [YOUR IMPRINT]
+
+
+# Copyright year.
+year = 2026
+
+
+# Your ISBN. Leave this EMPTY if you're using Amazon's free ISBN.
+isbn =
+
+
+# The dedication page. Use \n to start a new line.
+dedication = For every child who stops to help\nsomething small.

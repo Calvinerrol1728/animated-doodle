@@ -30,13 +30,39 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas as rl_canvas
 
 # ----------------------------------------------------------------------------
-# EDIT THESE BEFORE PUBLISHING
+# YOUR DETAILS LIVE IN  book_details.txt  — edit that file, not this one.
 # ----------------------------------------------------------------------------
-AUTHOR = "[YOUR NAME]"          # printed on the title page and copyright page
-PUBLISHER = "[YOUR IMPRINT]"    # or delete the line from the copyright block
-YEAR = "2026"
-ISBN = ""                       # leave "" if using a free KDP-assigned ISBN
-DEDICATION = "For every child who stops to help\nsomething small."
+def load_details():
+    """Read book_details.txt into a dict, with sensible fallbacks."""
+    defaults = {
+        "author": "[YOUR NAME]",
+        "publisher": "[YOUR IMPRINT]",
+        "year": "2026",
+        "isbn": "",
+        "dedication": "For every child who stops to help\nsomething small.",
+    }
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "book_details.txt")
+    if not os.path.exists(path):
+        return defaults
+    with open(path, encoding="utf-8") as fh:
+        for raw in fh:
+            line = raw.split("#", 1)[0].strip()
+            if not line or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key = key.strip().lower()
+            if key in defaults:
+                defaults[key] = value.strip().replace("\\n", "\n")
+    return defaults
+
+
+_D = load_details()
+AUTHOR = _D["author"]
+PUBLISHER = _D["publisher"]
+YEAR = _D["year"]
+ISBN = _D["isbn"]
+DEDICATION = _D["dedication"]
 
 # ----------------------------------------------------------------------------
 # Constants
@@ -482,6 +508,14 @@ def strip_unembedded_fonts(path):
 def main():
     os.makedirs(OUT, exist_ok=True)
     register_fonts()
+
+    if "[YOUR" in AUTHOR or "[YOUR" in PUBLISHER:
+        print("\n" + "!" * 68)
+        print("!!  HEADS UP: book_details.txt still has placeholder text.")
+        print("!!  These files will literally print '[YOUR NAME]' on the")
+        print("!!  title page. Edit book_details.txt and run this again")
+        print("!!  before uploading anywhere.")
+        print("!" * 68 + "\n")
 
     interior = build_interior()
     strip_unembedded_fonts(interior)

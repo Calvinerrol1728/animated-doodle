@@ -12,19 +12,37 @@ Regenerate both print files with `python3 build_print.py`.
 
 ---
 
-## ⚠️ Before you upload — edit these
+## ⚠️ Before you upload — put your name in the book
 
-Open `build_print.py` and change the block at the top, then re-run it:
+Open **`book_details.txt`**, replace the placeholders, save, then run:
 
-```python
-AUTHOR     = "[YOUR NAME]"       # title page + copyright page
-PUBLISHER  = "[YOUR IMPRINT]"    # or set to "" to omit
-YEAR       = "2026"
-ISBN       = ""                  # leave "" if using a free KDP ISBN
-DEDICATION = "For every child who stops to help\nsomething small."
+```bash
+python3 build_print.py
 ```
 
-The files currently print the literal placeholders `[YOUR NAME]` and `[YOUR IMPRINT]`.
+That's it — both PDFs rebuild in about 15 seconds with your details on the title page,
+copyright page, and dedication page.
+
+The file looks like this:
+
+```
+author = [YOUR NAME]
+publisher = [YOUR IMPRINT]
+year = 2026
+isbn =
+dedication = For every child who stops to help\nsomething small.
+```
+
+Notes:
+
+- Only change the text **after** the `=` sign.
+- `publisher` can be any name you like ("Moonpath Books") or left empty.
+- Leave `isbn` empty if you're using Amazon's free ISBN.
+- In `dedication`, `\n` starts a new line.
+- Lines starting with `#` are notes and are ignored.
+
+If you forget, the build prints a loud warning and the PDFs will literally say
+`[YOUR NAME]` — so you can't ship it by accident.
 
 ---
 

@@ -105,7 +105,7 @@ Illustrations were generated with AI and each page's text was proofread against
 `print/cover_wrap_print.pdf` (full wrap, 17.3663 × 11.25 in) are ready for Amazon KDP
 and IngramSpark. Build them with `python3 build_print.py`.
 
-**Edit `AUTHOR`, `PUBLISHER`, `YEAR`, `ISBN` and `DEDICATION` at the top of
-`build_print.py` before uploading** — the files currently print `[YOUR NAME]`.
+**Put your name in the book first:** edit [`book_details.txt`](book_details.txt) and
+re-run `python3 build_print.py`. The files currently print `[YOUR NAME]`.
 
 See [`PUBLISHING.md`](PUBLISHING.md) for verified specs, page order, and upload steps.
