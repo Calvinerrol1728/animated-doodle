@@ -5,3 +5,4 @@ __pycache__/
 # Scratch build artifacts
 preview_*.pdf
 print/.tmp/
+download/
