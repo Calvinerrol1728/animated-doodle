@@ -6,12 +6,12 @@
 
 
 # Your name, exactly as you want it printed on the title page.
-author = [YOUR NAME]
+author = Cedric Errol Cajelo
 
 
 # Your publishing name / imprint. Made-up names are fine ("Moonpath Books").
 # Leave it empty if you don't want one printed.
-publisher = [YOUR IMPRINT]
+publisher =
 
 
 # Copyright year.
