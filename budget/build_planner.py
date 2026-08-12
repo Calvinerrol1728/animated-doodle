@@ -63,6 +63,18 @@ def jpeg(im, q=88):
     return ImageReader(b)
 
 
+FIELDS = []          # [{page,x0,y0,x1,y1,kind,name}]
+_PAGE = [0]
+
+
+def rec(g, x0, y0, x1, y1, kind="text", name=None):
+    """Record a writing area so the fillable edition can place a form field."""
+    if g.dry or x1 - x0 < 8 or y1 - y0 < 6:
+        return
+    FIELDS.append({"page": _PAGE[0], "x0": x0, "y0": y0, "x1": x1, "y1": y1,
+                   "kind": kind, "name": name})
+
+
 class _Null:
     def __getattr__(self, _):
         return lambda *a, **k: None
@@ -157,6 +169,7 @@ class P:
         self.c.setLineWidth(0.7)
         for _ in range(n):
             self.c.line(x0, self.y, x1, self.y)
+            rec(self, x0, self.y + 1, x1, self.y + min(gap, 26) - 4)
             self.y -= gap
 
     def prompt(self, text, n, gap=None):
@@ -175,7 +188,9 @@ class P:
         x = self.M + pdfmetrics.stringWidth(label, "Sans-Bold", 10.5) + 10
         self.c.setStrokeColor(LINE)
         self.c.setLineWidth(0.7)
-        self.c.line(x, self.y - 2, (lw or self.W - self.M), self.y - 2)
+        xr = lw or self.W - self.M
+        self.c.line(x, self.y - 2, xr, self.y - 2)
+        rec(self, x, self.y - 1, xr, self.y + 12, name=label.rstrip(":"))
         self.y -= gap
 
     def table(self, cols, widths, rows, row_h=None, examples=None,
@@ -220,6 +235,9 @@ class P:
                 self.c.setFont("Sans", 9.5)
                 self.c.setFillColor(BROWN)
                 self.c.drawString(xs[0] + 7, y - row_h + 7, rows[r])
+            first = 1 if (not isinstance(rows, int) and rows[r]) else 0
+            for ci in range(first, len(widths)):
+                rec(self, xs[ci] + 2, y - row_h + 2, xs[ci + 1] - 2, y - 2)
             y -= row_h
         # grid
         self.c.setStrokeColor(LINE)
@@ -264,6 +282,7 @@ class P:
         self.c.setLineWidth(0.7)
         for _ in range(rows):
             self.c.line(x + 12, yy, x + w - 12, yy)
+            rec(self, x + 12, yy + 1, x + w - 12, yy + min(gap, 26) - 4)
             yy -= gap
         self.y = top - h - 12
         return self.y
@@ -280,6 +299,7 @@ class P:
         self.c.setStrokeColor(SAGE)
         self.c.setLineWidth(1.0)
         self.c.roundRect(x, y, s, s, 2, fill=0, stroke=1)
+        rec(self, x, y, x + s, y + s, kind="check")
 
     def progress_bar(self, x, y, w, h=14, segs=10):
         self.c.setFillColor(PANEL2)
@@ -437,6 +457,7 @@ def p_goals(g):
             g.c.setStrokeColor(LINE)
             g.c.setLineWidth(0.7)
             g.c.line(x, yy - 2, g.W - g.M - 14, yy - 2)
+            rec(g, x, yy - 1, g.W - g.M - 14, yy + 11)
             yy -= fgap
         g.y = top - h - 14
 
@@ -476,6 +497,7 @@ def p_income(g):
         g.c.drawString(g.M + 14, top - 21, t)
         g.c.setStrokeColor(LINE)
         g.c.line(g.M + 200, top - 23, g.W - g.M - 16, top - 23)
+        rec(g, g.M + 200, top - 22, g.W - g.M - 16, top - 8)
         g.y = top - 34 - 10
 
 
@@ -505,6 +527,7 @@ def p_variable(g):
             g.c.setStrokeColor(LINE)
             g.c.setLineWidth(0.7)
             g.c.line(x, top - 52, x + cw - 16, top - 52)
+            rec(g, x, top - 51, x + cw - 16, top - 39)
         g.y = top - h - 11
 
 
@@ -540,6 +563,7 @@ def p_needs_wants(g):
         g.c.setLineWidth(0.7)
         while yy > top - h + 14:
             g.c.line(x + 12, yy, x + bw - 12, yy)
+            rec(g, x + 12, yy + 1, x + bw - 12, yy + 22)
             yy -= 26
     g.y = top - h - 18
     g.para(C.NEEDS_WANTS["prompt"], "Serif-It", 11.5, BROWN, tw - 0.4 * IN, 17)
@@ -584,6 +608,7 @@ def p_savings_goals(g):
             g.c.setStrokeColor(LINE)
             g.c.setLineWidth(0.7)
             g.c.line(x, yy - 2, g.W - g.M - 16, yy - 2)
+            rec(g, x, yy - 1, g.W - g.M - 16, yy + 10)
             yy -= 21
         g.c.setFont("Sans", 8.6)
         g.c.setFillColor(GREY)
@@ -621,6 +646,8 @@ def p_challenge(g):
             g.c.setFont("Sans", 9)
             g.c.setFillColor(BROWN)
             g.c.drawCentredString(x + cw * 0.12, yy - rh + 7, str(day))
+            rec(g, x + cw * 0.24 + 2, yy - rh + 2, x + cw * 0.66 - 2, yy - 2)
+            rec(g, x + cw * 0.66 + 2, yy - rh + 2, x + cw - 2, yy - 2)
             yy -= rh
         g.c.setStrokeColor(LINE)
         g.c.setLineWidth(0.6)
@@ -685,6 +712,7 @@ def p_debt(g):
         g.c.drawString(x + 12, top - 16, t)
         g.c.setStrokeColor(LINE)
         g.c.line(x + 12, top - 31, x + bw - 12, top - 31)
+        rec(g, x + 12, top - 30, x + bw - 12, top - 17)
     g.y = top - 40 - 12
 
 
@@ -705,6 +733,7 @@ def p_debt_plan(g):
             g.c.setStrokeColor(LINE)
             g.c.setLineWidth(0.7)
             g.c.line(x, yy - 2, g.W - g.M - 14, yy - 2)
+            rec(g, x, yy - 1, g.W - g.M - 14, yy + 11)
             yy -= 30
         g.y = top - h - 14
     g.foot(C.DEBT_PLAN["quote"])
@@ -745,6 +774,8 @@ def p_no_spend(g):
             g.c.setFillColor(BROWN)
             g.c.drawCentredString(x + cw * 0.09, yy - rh + 7, str(day))
             g.checkbox(x + cw * 0.26 - 5, yy - rh + 6, 10)
+            rec(g, x + cw * 0.34 + 2, yy - rh + 2, x + cw * 0.78 - 2, yy - 2)
+            rec(g, x + cw * 0.78 + 2, yy - rh + 2, x + cw - 2, yy - 2)
             yy -= rh
         g.c.setStrokeColor(LINE)
         g.c.setLineWidth(0.6)
@@ -777,6 +808,7 @@ def p_grocery(g):
         g.c.drawCentredString(x + bw / 2, top - 17, t)
         g.c.setStrokeColor(LINE)
         g.c.line(x + 14, top - 38, x + bw - 14, top - 38)
+        rec(g, x + 14, top - 37, x + bw - 14, top - 24)
     g.y = top - 52 - 16
     left_w = tw * 0.56
     right_w = tw - left_w - 14
@@ -790,6 +822,7 @@ def p_grocery(g):
         g.c.setStrokeColor(LINE)
         g.c.setLineWidth(0.7)
         g.c.line(g.M + 68, yy - 2, g.M + left_w - 8, yy - 2)
+        rec(g, g.M + 68, yy - 1, g.M + left_w - 8, yy + 12)
         yy -= day_gap
     gx = g.M + left_w + 14
     gh = ytop - yy + 10
@@ -799,6 +832,7 @@ def p_grocery(g):
     g.c.setLineWidth(0.7)
     while ly > ytop + 12 - gh + 14:
         g.c.line(gx + 12, ly, gx + right_w - 12, ly)
+        rec(g, gx + 12, ly + 1, gx + right_w - 12, ly + 20)
         ly -= 24
     g.y = yy - 6
 
@@ -835,6 +869,7 @@ def p_habits(g):
         g.c.setLineWidth(0.7)
         while yy > top - h + 12:
             g.c.line(x + 12, yy, x + bw - 12, yy)
+            rec(g, x + 12, yy + 1, x + bw - 12, yy + 22)
             yy -= 26
     g.y = top - h - 16
     g.panel_lines(C.HABITS["new"], 3, gap=28)
@@ -860,6 +895,7 @@ def p_checkin(g):
         g.c.setLineWidth(0.7)
         while yy > top - h + 12:
             g.c.line(g.M + 14, yy, g.W - g.M - 14, yy)
+            rec(g, g.M + 14, yy + 1, g.W - g.M - 14, yy + 20)
             yy -= 24
         g.y = top - h - 12
 
@@ -881,6 +917,7 @@ def p_review(g):
         g.c.drawCentredString(x + bw / 2, top - 17, t)
         g.c.setStrokeColor(LINE)
         g.c.line(x + 14, top - 37, x + bw - 14, top - 37)
+        rec(g, x + 14, top - 36, x + bw - 14, top - 23)
     g.y = top - 50 - 12
 
 
@@ -901,9 +938,11 @@ def p_where(g):
         g.c.setStrokeColor(LINE)
         g.c.setLineWidth(0.7)
         g.c.line(g.M + tw * 0.62, top - 2, g.M + tw * 0.80, top - 2)
+        rec(g, g.M + tw * 0.62, top - 1, g.M + tw * 0.80, top + 11)
         g.c.setFillColor(GREY)
         g.c.drawString(g.M + tw * 0.84, top, "%")
         g.c.line(g.M + tw * 0.88, top - 2, g.M + tw, top - 2)
+        rec(g, g.M + tw * 0.88, top - 1, g.M + tw, top + 11)
         g.progress_bar(g.M, top - 26, tw, 13, segs=10)
         g.y = top - 52
 
@@ -935,6 +974,7 @@ def p_wins(g):
         g.c.setLineWidth(0.7)
         while yy > top - h + 10:
             g.c.line(g.M + 14, yy, g.W - g.M - 14, yy)
+            rec(g, g.M + 14, yy + 1, g.W - g.M - 14, yy + 20)
             yy -= 24
         g.y = top - h - 12
 
@@ -977,6 +1017,7 @@ def p_dashboard(g):
         g.c.setStrokeColor(LINE)
         g.c.setLineWidth(0.8)
         g.c.line(x + 14, y - th + 18, x + bw - 14, y - th + 18)
+        rec(g, x + 14, y - th + 19, x + bw - 14, y - 22)
     g.y = top - 3 * (th + 12) - 2
     wh = g.spread(2, gap=12, lo=76, hi=150)
     for t in C.DASHBOARD["wide"]:
@@ -1052,6 +1093,7 @@ def p_final(g):
         c.setStrokeColor(LINE)
         c.setLineWidth(0.7)
         c.line(g.M + 8, g.y, g.W - g.M - 8, g.y)
+        rec(g, g.M + 8, g.y + 1, g.W - g.M - 8, g.y + 20)
         g.y -= 26
 
 
@@ -1129,7 +1171,8 @@ def build(path, W, H):
     ]
     global PAGES
     PAGES = [(n, i) for i, (n, _f, _a) in enumerate(plan)]
-    for _name, fn, auto in plan:
+    for pi, (_name, fn, auto) in enumerate(plan):
+        _PAGE[0] = pi
         if auto:
             fitted(mk, fn, foot)
         else:
@@ -1137,6 +1180,13 @@ def build(path, W, H):
         c.showPage()
     c.save()
     return path
+
+
+def dump_fields(path):
+    import json
+    with open(path, "w") as fh:
+        json.dump(FIELDS, fh)
+    return len(FIELDS)
 
 
 def strip_helvetica(path):
@@ -1169,10 +1219,15 @@ def strip_helvetica(path):
 def main():
     os.makedirs(OUT, exist_ok=True)
     register_fonts()
+    FIELDS.clear()
     a = build(os.path.join(OUT, "budget_planner_US_Letter.pdf"), 8.5 * IN, 11 * IN)
+    n = dump_fields(os.path.join(OUT, "fields_letter.json"))
+    print(f"  recorded {n} writing areas (US Letter)")
     strip_helvetica(a)
+    FIELDS.clear()
     b = build(os.path.join(OUT, "budget_planner_A4.pdf"),
               210 / 25.4 * IN, 297 / 25.4 * IN)
+    dump_fields(os.path.join(OUT, "fields_a4.json"))
     strip_helvetica(b)
     from pypdf import PdfReader
     for f in (a, b):
