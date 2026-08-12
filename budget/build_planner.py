@@ -759,11 +759,10 @@ def p_no_spend(g):
         g.c.setFillColor(SAGE)
         g.c.rect(x, yy - 19, cw, 19, fill=1, stroke=0)
         g.c.setFillColor(HexColor("#FFFFFF"))
-        g.c.setFont("Sans-Bold", 7.6)
-        g.c.drawCentredString(x + cw * 0.09, yy - 13, "DAY")
-        g.c.drawCentredString(x + cw * 0.26, yy - 13, "NO-SPEND")
-        g.c.drawCentredString(x + cw * 0.58, yy - 13, "WHAT I DID INSTEAD")
-        g.c.drawCentredString(x + cw * 0.88, yy - 13, "KEPT")
+        g.c.setFont("Sans-Bold", 6.4)
+        for frac, label in zip((0.075, 0.235, 0.55, 0.87),
+                               C.NO_SPEND["cols"]):
+            g.c.drawCentredString(x + cw * frac, yy - 12.5, label)
         yy -= 19
         for r in range(15):
             day = col * 15 + r + 1
@@ -772,10 +771,10 @@ def p_no_spend(g):
                 g.c.rect(x, yy - rh, cw, rh, fill=1, stroke=0)
             g.c.setFont("Sans", 8.8)
             g.c.setFillColor(BROWN)
-            g.c.drawCentredString(x + cw * 0.09, yy - rh + 7, str(day))
-            g.checkbox(x + cw * 0.26 - 5, yy - rh + 6, 10)
-            rec(g, x + cw * 0.34 + 2, yy - rh + 2, x + cw * 0.78 - 2, yy - 2)
-            rec(g, x + cw * 0.78 + 2, yy - rh + 2, x + cw - 2, yy - 2)
+            g.c.drawCentredString(x + cw * 0.075, yy - rh + 7, str(day))
+            g.checkbox(x + cw * 0.235 - 5, yy - rh + 6, 10)
+            rec(g, x + cw * 0.33 + 2, yy - rh + 2, x + cw * 0.77 - 2, yy - 2)
+            rec(g, x + cw * 0.77 + 2, yy - rh + 2, x + cw - 2, yy - 2)
             yy -= rh
         g.c.setStrokeColor(LINE)
         g.c.setLineWidth(0.6)
@@ -783,7 +782,7 @@ def p_no_spend(g):
         for _ in range(16):
             g.c.line(x, yy2, x + cw, yy2)
             yy2 -= rh
-        for fx in (0.0, 0.18, 0.34, 0.78, 1.0):
+        for fx in (0.0, 0.15, 0.33, 0.77, 1.0):
             g.c.line(x + cw * fx, top, x + cw * fx, top - 19 - 15 * rh)
         g.c.setStrokeColor(BEIGE)
         g.c.setLineWidth(0.9)
