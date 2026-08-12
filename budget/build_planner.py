@@ -179,8 +179,16 @@ class P:
         self.y -= gap
 
     def table(self, cols, widths, rows, row_h=None, examples=None,
-              zebra=True, head_h=22):
-        """A professional ruled table with a filled header band."""
+              zebra=True, head_h=22, fill=True, reserve=0.0, max_h=36.0):
+        """A professional ruled table with a filled header band.
+
+        With fill=True the row height expands so the table reaches the
+        bottom margin, leaving `reserve` points for anything below it.
+        """
+        n_rows = rows if isinstance(rows, int) else len(rows)
+        if fill:
+            avail = self.y - head_h - reserve - self.M * 1.05
+            row_h = max(row_h or 24.0, min(max_h, avail / n_rows))
         row_h = row_h or self.gap
         tw = self.W - 2 * self.M
         xs, acc = [], self.M
@@ -199,7 +207,7 @@ class P:
             self.c.setFont("Sans-Bold", size)
             self.c.drawCentredString(xs[i] + cw / 2, top - head_h + 7.5, name)
         y = top - head_h
-        n = rows if isinstance(rows, int) else len(rows)
+        n = n_rows
         for r in range(n):
             if zebra and r % 2 == 1:
                 self.c.setFillColor(PANEL)
@@ -259,6 +267,14 @@ class P:
             yy -= gap
         self.y = top - h - 12
         return self.y
+
+    def space(self, reserve=0.0):
+        """Vertical room left above the bottom margin."""
+        return self.y - self.M * 1.05 - reserve
+
+    def spread(self, n, reserve=0.0, gap=12.0, lo=40.0, hi=200.0):
+        """Panel height so n stacked panels exactly fill the page."""
+        return max(lo, min(hi, (self.space(reserve) - gap * (n - 1)) / n))
 
     def checkbox(self, x, y, s=11):
         self.c.setStrokeColor(SAGE)
@@ -329,21 +345,25 @@ def p_cover(g):
     c.setFillColor(BROWN)
     c.drawCentredString(g.cx, y, C.SUBTITLE)
 
-    yb = 0.86 * IN
-    c.setFillColor(Color(1, 1, 1, alpha=0.80))
-    c.roundRect(g.M - 6, yb - 10, g.W - 2 * (g.M - 6), 36, 6, fill=1, stroke=0)
-    c.setFont("Sans-Bold", 11.5)
+    y -= 0.46 * IN
+    pill_w = pdfmetrics.stringWidth(C.TAGLINE, "Sans-Bold", 11) + 46
+    c.setFillColor(Color(1, 1, 1, alpha=0.72))
+    c.roundRect(g.cx - pill_w / 2, y - 11, pill_w, 30, 15, fill=1, stroke=0)
+    c.setStrokeColor(HexColor("#CFC3AC"))
+    c.setLineWidth(0.7)
+    c.roundRect(g.cx - pill_w / 2, y - 11, pill_w, 30, 15, fill=0, stroke=1)
+    c.setFont("Sans-Bold", 11)
     c.setFillColor(SAGE_D)
-    c.drawCentredString(g.cx, yb + 6, C.TAGLINE)
+    c.drawCentredString(g.cx, y - 1, C.TAGLINE)
 
 
 def p_belongs(g):
     g.bg(); g.frame()
     g.header(C.BELONGS["title"], size=22)
-    g.y -= 0.6 * IN
+    g.y -= 0.9 * IN
     for f in C.BELONGS["fields"]:
-        g.field(f, gap=0.62 * IN)
-    g.y -= 0.3 * IN
+        g.field(f, gap=1.05 * IN)
+    g.y -= 0.5 * IN
     g.para(C.BELONGS["quote"], "Serif-It", 12.5, GREY,
            g.W - 2 * g.M - 0.6 * IN, 18)
     g.foot("")
@@ -375,9 +395,9 @@ def p_howto(g):
     g.bg(); g.frame()
     g.header(C.HOWTO["title"])
     g.y -= 8
+    h = g.spread(5, reserve=44, gap=14, lo=56, hi=110)
     for i, s in enumerate(C.HOWTO["steps"], 1):
         top = g.y
-        h = 56
         g.panel(None, h)
         g.c.setFillColor(HexColor("#E7DFD0"))
         g.c.circle(g.M + 30, top - h / 2, 15, fill=1, stroke=0)
@@ -402,9 +422,11 @@ def p_goals(g):
     g.bg(); g.frame()
     g.header(C.GOALS["title"])
     g.y -= 6
+    ph = g.spread(3, gap=14, lo=150, hi=260)
+    fgap = (ph - 44) / 4
     for s in C.GOALS["sections"]:
         top = g.y
-        h = 4 * 30 + 34
+        h = ph
         g.panel(s, h)
         yy = top - 44
         for f in C.GOALS["fields"]:
@@ -415,7 +437,7 @@ def p_goals(g):
             g.c.setStrokeColor(LINE)
             g.c.setLineWidth(0.7)
             g.c.line(x, yy - 2, g.W - g.M - 14, yy - 2)
-            yy -= 30
+            yy -= fgap
         g.y = top - h - 14
 
 
@@ -424,7 +446,7 @@ def p_year(g):
     g.header(C.YEAR_VIEW["title"])
     g.gap = 30
     g.table(C.YEAR_VIEW["cols"], [0.16, 0.19, 0.19, 0.19, 0.27],
-            C.MONTHS, row_h=30)
+            C.MONTHS, row_h=30, max_h=50)
 
 
 def p_month_overview(g):
@@ -432,15 +454,19 @@ def p_month_overview(g):
     g.header(C.MONTH_OVERVIEW["title"])
     g.y -= 4
     for f in C.MONTH_OVERVIEW["fields"]:
-        g.field(f, gap=34)
-    g.y -= 6
-    g.panel_lines(C.MONTH_OVERVIEW["calendar_note"], 7, gap=28)
+        g.field(f, gap=42)
+    g.y -= 8
+    avail = g.y - g.M * 1.05
+    n = max(7, int((avail - 34) // 30))
+    g.panel_lines(C.MONTH_OVERVIEW["calendar_note"], n,
+                  gap=(avail - 34) / n)
 
 
 def p_income(g):
     g.bg(); g.frame()
     g.header(C.INCOME["title"])
-    g.table(C.INCOME["cols"], C.INCOME["widths"], C.INCOME["rows"], row_h=27)
+    g.table(C.INCOME["cols"], C.INCOME["widths"], C.INCOME["rows"], row_h=27,
+            reserve=104)
     g.y -= 4
     for t in C.INCOME["totals"]:
         top = g.y
@@ -458,7 +484,7 @@ def p_fixed(g):
     g.header(C.FIXED["title"], "Common examples are shown in grey \u2014 "
                                "write your own amounts beside them.")
     rows = C.FIXED["examples"] + [""] * C.FIXED["extra_rows"]
-    g.table(C.FIXED["cols"], C.FIXED["widths"], rows, row_h=30)
+    g.table(C.FIXED["cols"], C.FIXED["widths"], rows, row_h=30, max_h=44)
 
 
 def p_variable(g):
@@ -486,7 +512,7 @@ def p_budget(g):
     g.bg(); g.frame()
     g.header(C.BUDGET["title"])
     rows = C.BUDGET["sections"] + [C.BUDGET["total"]]
-    xs = g.table(C.BUDGET["cols"], C.BUDGET["widths"], rows, row_h=32)
+    g.table(C.BUDGET["cols"], C.BUDGET["widths"], rows, row_h=32, max_h=46)
 
 
 def p_needs_wants(g):
@@ -496,7 +522,7 @@ def p_needs_wants(g):
     tw = g.W - 2 * g.M
     bw = (tw - 14) / 2
     top = g.y
-    h = 3.0 * IN
+    h = g.space(reserve=170)
     for i, (t, ex) in enumerate([(C.NEEDS_WANTS["needs_title"],
                                   C.NEEDS_WANTS["needs_examples"]),
                                  (C.NEEDS_WANTS["wants_title"],
@@ -524,14 +550,16 @@ def p_needs_wants(g):
 def p_bills(g):
     g.bg(); g.frame()
     g.header(C.BILLS["title"])
-    g.table(C.BILLS["cols"], C.BILLS["widths"], C.BILLS["rows"], row_h=26)
+    g.table(C.BILLS["cols"], C.BILLS["widths"], C.BILLS["rows"], row_h=26,
+            reserve=30)
     g.foot(C.BILLS["note"])
 
 
 def p_subs(g):
     g.bg(); g.frame()
     g.header(C.SUBS["title"])
-    g.table(C.SUBS["cols"], C.SUBS["widths"], C.SUBS["rows"], row_h=26)
+    g.table(C.SUBS["cols"], C.SUBS["widths"], C.SUBS["rows"], row_h=26,
+            reserve=150)
     g.y -= 2
     for p in C.SUBS["prompts"]:
         g.para(p, "Serif-It", 11, BROWN, g.W - 2 * g.M, 16)
@@ -573,7 +601,7 @@ def p_challenge(g):
     tw = g.W - 2 * g.M
     cw = (tw - 16) / 2
     top = g.y
-    rh = 24
+    rh = min(34.0, max(24.0, (top - 19 - g.M * 1.05) / 15))
     for col in range(2):
         x = g.M + col * (cw + 16)
         yy = top
@@ -613,12 +641,12 @@ def p_emergency(g):
     g.header(C.EMERGENCY["title"])
     g.y -= 6
     for p in C.EMERGENCY["prompts"]:
-        g.field(p, gap=40)
-    g.y -= 10
+        g.field(p, gap=46)
+    g.y -= 18
     # thermometer: 10 stacked segments
     top = g.y
-    h = 3.3 * IN
-    bw = 1.15 * IN
+    h = g.space(reserve=76)
+    bw = 1.7 * IN
     x = g.cx - bw / 2
     g.c.setFillColor(PANEL2)
     g.c.roundRect(x, top - h, bw, h, 8, fill=1, stroke=0)
@@ -643,7 +671,8 @@ def p_emergency(g):
 def p_debt(g):
     g.bg(); g.frame()
     g.header(C.DEBT["title"])
-    g.table(C.DEBT["cols"], C.DEBT["widths"], C.DEBT["rows"], row_h=27)
+    g.table(C.DEBT["cols"], C.DEBT["widths"], C.DEBT["rows"], row_h=27,
+            reserve=58)
     g.y -= 2
     tw = g.W - 2 * g.M
     bw = (tw - 14) / 2
@@ -684,7 +713,8 @@ def p_debt_plan(g):
 def p_weekly(g, idx):
     g.bg(); g.frame()
     g.header(C.WEEKLY["titles"][idx])
-    g.table(C.WEEKLY["cols"], C.WEEKLY["widths"], C.WEEKLY["rows"], row_h=25)
+    g.table(C.WEEKLY["cols"], C.WEEKLY["widths"], C.WEEKLY["rows"], row_h=25,
+            max_h=32)
 
 
 def p_no_spend(g):
@@ -693,7 +723,7 @@ def p_no_spend(g):
     tw = g.W - 2 * g.M
     cw = (tw - 16) / 2
     top = g.y
-    rh = 23
+    rh = min(30.0, max(23.0, (top - 19 - 130 - g.M * 1.05) / 15))
     for col in range(2):
         x = g.M + col * (cw + 16)
         yy = top
@@ -751,6 +781,7 @@ def p_grocery(g):
     left_w = tw * 0.56
     right_w = tw - left_w - 14
     ytop = g.y
+    day_gap = max(30.0, (ytop - g.M * 1.25) / 7)
     yy = ytop
     for d in C.GROCERY["days"]:
         g.c.setFont("Sans-Bold", 9.2)
@@ -759,22 +790,24 @@ def p_grocery(g):
         g.c.setStrokeColor(LINE)
         g.c.setLineWidth(0.7)
         g.c.line(g.M + 68, yy - 2, g.M + left_w - 8, yy - 2)
-        yy -= 30
+        yy -= day_gap
     gx = g.M + left_w + 14
     gh = ytop - yy + 10
     g.panel(C.GROCERY["list_title"], gh, gx, right_w, ytop + 12)
     ly = ytop - 14
     g.c.setStrokeColor(LINE)
-    while ly > ytop + 12 - gh + 12:
+    g.c.setLineWidth(0.7)
+    while ly > ytop + 12 - gh + 14:
         g.c.line(gx + 12, ly, gx + right_w - 12, ly)
-        ly -= 22
+        ly -= 24
     g.y = yy - 6
 
 
 def p_shopping(g):
     g.bg(); g.frame()
     g.header(C.SHOPPING["title"])
-    g.table(C.SHOPPING["cols"], C.SHOPPING["widths"], C.SHOPPING["rows"], row_h=26)
+    g.table(C.SHOPPING["cols"], C.SHOPPING["widths"], C.SHOPPING["rows"], row_h=26,
+            reserve=34)
     g.foot(C.SHOPPING["prompt"])
 
 
@@ -793,7 +826,7 @@ def p_habits(g):
     tw = g.W - 2 * g.M
     bw = (tw - 14) / 2
     top = g.y
-    h = 2.9 * IN
+    h = g.space(reserve=140)
     for i, t in enumerate([C.HABITS["keep"], C.HABITS["change"]]):
         x = g.M + i * (bw + 14)
         g.panel(t, h, x, bw, top)
@@ -811,9 +844,10 @@ def p_checkin(g):
     g.bg(); g.frame()
     g.header(C.CHECKIN["title"])
     g.y -= 4
+    hh = g.spread(4, gap=12, lo=100, hi=170)
     for name, q in C.CHECKIN["sections"]:
         top = g.y
-        h = 1.45 * IN
+        h = hh
         g.panel(None, h)
         g.c.setFont("Serif-Semi", 13)
         g.c.setFillColor(SAGE_D)
@@ -833,7 +867,8 @@ def p_checkin(g):
 def p_review(g):
     g.bg(); g.frame()
     g.header(C.REVIEW["title"])
-    g.table(C.REVIEW["cols"], C.REVIEW["widths"], C.REVIEW["rows"], row_h=30)
+    g.table(C.REVIEW["cols"], C.REVIEW["widths"], C.REVIEW["rows"], row_h=30,
+            reserve=64)
     g.y -= 2
     tw = g.W - 2 * g.M
     bw = (tw - 20) / 3
@@ -885,9 +920,10 @@ def p_wins(g):
     g.bg(); g.frame()
     g.header(C.WINS["title"], size=21)
     g.y -= 8
+    hh = g.spread(5, gap=12, lo=80, hi=140)
     for p in C.WINS["prompts"]:
         top = g.y
-        h = 1.15 * IN
+        h = hh
         g.panel(None, h)
         g.c.setFillColor(ROSE)
         g.c.circle(g.M + 22, top - 20, 3.0, fill=1, stroke=0)
@@ -915,8 +951,11 @@ def p_next(g):
     g.bg(); g.frame()
     g.header(C.NEXT_MONTH["title"])
     g.y -= 4
+    hh = g.spread(6, gap=12, lo=76, hi=130)
+    ngap = (hh - 34) / 2
     for s in C.NEXT_MONTH["sections"]:
-        g.panel_lines(s, 2, gap=26)
+        g.panel_lines(s, 2, gap=ngap)
+        g.y += 12 - 12
 
 
 def p_dashboard(g):
@@ -926,7 +965,7 @@ def p_dashboard(g):
     tw = g.W - 2 * g.M
     bw = (tw - 14) / 2
     top = g.y
-    th = 1.05 * IN
+    th = max(70.0, (g.space(reserve=200) - 2 * 12) / 3)
     for i, t in enumerate(C.DASHBOARD["tiles"]):
         r, c_ = divmod(i, 2)
         x = g.M + c_ * (bw + 14)
@@ -938,24 +977,27 @@ def p_dashboard(g):
         g.c.setStrokeColor(LINE)
         g.c.setLineWidth(0.8)
         g.c.line(x + 14, y - th + 18, x + bw - 14, y - th + 18)
-    g.y = top - 3 * (th + 12) - 4
+    g.y = top - 3 * (th + 12) - 2
+    wh = g.spread(2, gap=12, lo=76, hi=150)
     for t in C.DASHBOARD["wide"]:
-        g.panel_lines(t, 2, gap=26)
+        g.panel_lines(t, 2, gap=(wh - 34) / 2)
 
 
 def p_master(g):
     g.bg(); g.frame()
     g.header(C.MASTER["title"])
-    g.table(C.MASTER["cols"], C.MASTER["widths"], C.MASTER["rows"], row_h=32)
+    g.table(C.MASTER["cols"], C.MASTER["widths"], C.MASTER["rows"], row_h=32,
+            max_h=44)
 
 
 def p_reset(g):
     g.bg(); g.frame()
     g.header(C.RESET["title"])
     g.y -= 10
+    hh = g.spread(10, reserve=46, gap=9, lo=40, hi=62)
     for it in C.RESET["items"]:
         top = g.y
-        h = 40
+        h = hh
         g.panel(None, h)
         g.checkbox(g.M + 16, top - 26, 13)
         g.c.setFont("Sans", 11)
