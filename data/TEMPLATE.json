@@ -1,0 +1,57 @@
+{
+  "title": "PASTE YOUR COURSE TITLE HERE",
+  "subtitle": "e.g. annual refresher · knowledge base + assessment prep",
+  "pass_mark": 70,
+  "suggested_time_minutes": 20,
+
+  "_how_to_use": [
+    "Fill in sections (your notes), flashcards (recall prompts) and questions (your self-test bank).",
+    "Delete any array you do not need — an empty array is fine.",
+    "Keep this file valid JSON: double quotes, no trailing commas, no comments. Run `python3 tools/validate.py` to check.",
+    "Copy this file to deck.json (`cp TEMPLATE.json deck.json`) so app.js can fetch it directly, or just paste the contents into the in-app import box."
+  ],
+
+  "sections": [
+    {
+      "title": "Section name from the course outline",
+      "points": [
+        {
+          "point": "The rule, in your own words — the thing you must be able to restate without looking",
+          "why": "Why the near-miss answer is wrong, or the number/date the examiner likes to swap."
+        },
+        {
+          "point": "Second rule",
+          "why": "Exam trap note."
+        }
+      ],
+      "body": "Or use free-form prose instead of points. Markdown-lite: **bold**, `code`, and lines starting with '- '.\n\nLeave \"points\" empty if you use \"body\"."
+    }
+  ],
+
+  "flashcards": [
+    { "front": "Question prompt", "back": "Answer. Newlines become paragraphs; '- ' lines become bullets.", "section": "Section name from the course outline" }
+  ],
+
+  "questions": [
+    {
+      "type": "single",
+      "stem": "One best answer?",
+      "options": ["Distractor that looks right", "The correct option", "Another distractor", "Half-true distractor"],
+      "answer": 1,
+      "rationale": "Why option B is right.",
+      "why_wrong": "Why A/C/D fail.",
+      "section": "Section name from the course outline"
+    },
+    {
+      "type": "multiple",
+      "stem": "Select all that apply.",
+      "options": ["True statement", "False statement", "Also true", "Nearly true but not quite"],
+      "answer": [0, 2],
+      "rationale": "Rationale text.",
+      "why_wrong": "Why 1 and 3 are wrong.",
+      "section": "Section name from the course outline"
+    },
+    { "type": "truefalse", "stem": "A statement that is false.", "answer": false, "rationale": "Because…" },
+    { "type": "fillin", "stem": "The minimum period is ____ days.", "answer": ["30 days", "thirty days"], "rationale": "Accepts any listed variant." }
+  ]
+}

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Study Deck — course prep, the honest way</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" class="logo" aria-hidden="true">
+      <rect x="2" y="5" width="12" height="22" rx="2" class="l1" />
+      <rect x="18" y="5" width="12" height="22" rx="2" transform="rotate(8 24 16)" class="l2" />
+      <path d="M5 11h6M5 15h6M5 19h4" class="ln" />
+    </svg>
+    <div>
+      <h1 id="course-title">Untitled course</h1>
+      <p id="course-meta" class="meta">no material loaded</p>
+    </div>
+  </div>
+  <div class="top-right">
+    <div class="streak" id="streak" title="Days studied">·</div>
+    <button class="ghost" id="btn-import" type="button">Paste / import material</button>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs" role="tablist">
+  <button class="tab is-active" data-mode="notes" role="tab" type="button">Notes</button>
+  <button class="tab" data-mode="cards" role="tab" type="button">Flashcards</button>
+  <button class="tab" data-mode="practice" role="tab" type="button">Practice</button>
+  <button class="tab" data-mode="mock" role="tab" type="button">Mock exam</button>
+  <button class="tab" data-mode="weak" role="tab" type="button">Weak spots <span class="pill" id="weak-count">0</span></button>
+</nav>
+
+<main>
+  <div class="statusline" id="statusline" hidden>
+    <strong id="status-q"></strong>
+    <div class="bar"><i id="status-bar"></i></div>
+    <span id="status-score" class="mono"></span>
+  </div>
+  <section id="view" class="view"></section>
+</main>
+
+<dialog id="import-modal">
+  <form method="dialog" class="import-form">
+    <h2>Load your own course material</h2>
+    <p class="hint">
+      Paste JSON, or your raw notes in the markdown shape shown in
+      <code>data/TEMPLATE.md</code>. Nothing is uploaded — the deck is saved in this browser only.
+    </p>
+    <textarea id="import-text" rows="14" spellcheck="false" placeholder="{ &quot;title&quot;: &quot;...&quot;, &quot;sections&quot;: [...], &quot;flashcards&quot;: [...], &quot;questions&quot;: [...] }"></textarea>
+    <div class="drop" id="drop">…or drop a <code>.json</code> file here</div>
+    <p class="err" id="import-err" hidden></p>
+    <div class="row-end">
+      <button class="ghost" id="export-deck" type="button">Serialise current deck</button>
+      <button class="ghost" value="cancel" type="button" data-close>Cancel</button>
+      <button class="primary" id="import-go" type="button">Load deck</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="data/deck.json.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
