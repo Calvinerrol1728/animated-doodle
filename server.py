@@ -168,6 +168,14 @@ def register_recruit_to_excel(data):
     return recruit_id, email_result
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, HEAD")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With")
+        self.send_header("Access-Control-Max-Age", "86400")
+        self.end_headers()
+
     def do_HEAD(self):
         self.do_GET()
 
