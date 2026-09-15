@@ -121,12 +121,13 @@ Email: {SENDER_EMAIL}
 </html>
 """
 
-    # Generate mailto link for pre-filled email client
+    # Generate mailto and Gmail direct compose links
     mailto_params = {
         "subject": subject,
         "body": text_body
     }
     mailto_url = f"mailto:{candidate_email}?{urllib.parse.urlencode(mailto_params)}"
+    gmail_url = f"https://mail.google.com/mail/?view=cm&fs=1&to={urllib.parse.quote(candidate_email)}&su={urllib.parse.quote(subject)}&body={urllib.parse.quote(text_body)}"
 
     return {
         "sender": f"{SENDER_NAME} <{SENDER_EMAIL}>",
@@ -136,7 +137,8 @@ Email: {SENDER_EMAIL}
         "subject": subject,
         "text": text_body,
         "html": html_body,
-        "mailto": mailto_url
+        "mailto": mailto_url,
+        "gmail_url": gmail_url
     }
 
 def send_thank_you_email(candidate_name, candidate_email, recruit_id, add_date):
@@ -197,7 +199,8 @@ def send_thank_you_email(candidate_name, candidate_email, recruit_id, add_date):
         "subject": email_data["subject"],
         "recruit_id": recruit_id,
         "outbox_path": f"/outbox/{recruit_id}.html",
-        "mailto": email_data["mailto"]
+        "mailto": email_data["mailto"],
+        "gmail_url": email_data["gmail_url"]
     }
 
 if __name__ == "__main__":

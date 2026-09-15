@@ -365,8 +365,11 @@
       </div>
 
       <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
-        <a id="viewEmailBtn" href="#" target="_blank" class="btn-primary-small">
-          👁️ Preview Sent Email
+        <a id="openGmailBtn" href="#" target="_blank" class="btn-primary-small" style="background: #EA4335;">
+          ✉️ Send via Gmail (1-Click)
+        </a>
+        <a id="viewEmailBtn" href="#" target="_blank" class="btn-secondary">
+          👁️ Preview Email
         </a>
         <a id="openMailtoBtn" href="#" class="btn-secondary">
           📧 Open in Mail App
@@ -435,6 +438,7 @@
         if (result.email) {
           document.getElementById('viewEmailBtn').href = result.email.outbox_path;
           document.getElementById('openMailtoBtn').href = result.email.mailto;
+          document.getElementById('openGmailBtn').href = result.email.gmail_url;
         }
         return;
       }
@@ -457,6 +461,7 @@
       const mailtoBody = encodeURIComponent(`Dear ${formData.name},\n\nThank you for registering for our Agency Discovery Day (ADD) orientation!\n\nYour Registration Details:\n• Candidate Name: ${formData.name}\n• Contact Number: ${formData.phone}\n• Email Address: ${formData.email}\n• Scheduled ADD Session: Thursday, September 17, 2026 at 7:00 PM\n• Coordinator / Recruiter: Cedric (cedric.axa1@gmail.com)\n\nWe look forward to welcoming you to the session!\n\nWarm regards,\nCedric\nFinancial Advisory Agency Leader`);
 
       document.getElementById('openMailtoBtn').href = `mailto:${formData.email}?cc=cedric.axa1@gmail.com&subject=${mailtoSubject}&body=${mailtoBody}`;
+      document.getElementById('openGmailBtn').href = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(formData.email)}&su=${mailtoSubject}&body=${mailtoBody}`;
       document.getElementById('viewEmailBtn').style.display = 'none';
     }
 

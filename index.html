@@ -787,7 +787,10 @@
         });
         const result = await res.json();
         if (result.success) {
-          alert(`Success! ${payload.name} has been added to your Excel sheet with ID: ${result.recruit_id}!\n\nA thank-you confirmation email from Cedric (cedric.axa1@gmail.com) has been dispatched to ${payload.email}.`);
+          const sendGmail = confirm(`Success! ${payload.name} has been added to your Excel sheet with ID: ${result.recruit_id}!\n\nWould you like to open Gmail now to send the official thank-you email to ${payload.email} from Cedric (cedric.axa1@gmail.com)?`);
+          if (sendGmail && result.email && result.email.gmail_url) {
+            window.open(result.email.gmail_url, '_blank');
+          }
           document.getElementById('dashRegisterForm').reset();
           document.getElementById('d-recruiter').value = "Cedric (cedric.axa1@gmail.com)";
           await loadData();
