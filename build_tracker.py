@@ -94,7 +94,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
     # 5 Executive KPI Summary Cards
     style_card("B", "D", "EBF4FF", "93C5FD", "1E40AF", "TOTAL RECRUITS TRACKED", "=COUNTA(B9:B65)", False, "Active candidates in pipeline")
     style_card("F", "H", "E0F2FE", "7DD3FC", "0369A1", "ATTENDED ADD", '=COUNTIF(H9:H65, "Yes")', False, '="Attendance Rate: " & TEXT(IFERROR(COUNTIF(H9:H65,"Yes")/COUNTA(B9:B65),0),"0.0%")')
-    style_card("J", "L", "FEF3C7", "FCD34D", "B45309", "LMS IN PROGRESS", '=COUNTIF(L9:L65, "In Progress")', False, "Currently taking online modules")
+    style_card("J", "L", "FEF3C7", "FCD34D", "B45309", "LMS IN PROGRESS", '=COUNTIF(L9:L65, "In Progress")', False, "Currently processing modules")
     style_card("N", "P", "DCFCE7", "86EFAC", "15803D", "COMPLETED LMS", '=COUNTIF(L9:L65, "Yes")', False, '="Completion Rate: " & TEXT(IFERROR(COUNTIF(L9:L65,"Yes")/COUNTIF(H9:H65,"Yes"),0),"0.0%")')
     style_card("R", "S", "F3E8FF", "D8B4FE", "7E22CE", "FUNNEL CONVERSION", '=IFERROR(COUNTIF(L9:L65,"Yes")/COUNTA(B9:B65),0)', True, "Total Recruits -> LMS Certified")
 
@@ -156,12 +156,9 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
     ws1.row_dimensions[8].height = 30
 
     # User's Encoded Recruits:
-    # 1. Maybe Grandes (Attended ADD Sept 14, setting up LMS today)
-    # 2. Michael Bagiuos
-    # 3. Alona Barilea
-    # 4. Lorenz Garrucha
-    # 5. Princess Ambos
-    # 6. Jezreel Kate Montano
+    # ALL attended ADD yesterday, Sept 14, 2026!
+    # It was just Maybe who is going to process LMS (In Progress/processing today).
+    # The other 5 attended ADD and are pending LMS processing / decision.
     recruits_list = [
         (
             "REC-001",
@@ -171,105 +168,105 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
             datetime.date(2026, 9, 14),
             "Yes",
             datetime.date(2026, 9, 14),
-            "Attended ADD on Sept 14; confirmed interest. Preparing for LMS setup.",
+            "Attended ADD on Sept 14; confirmed proceeding with LMS training.",
             datetime.date(2026, 9, 15),
-            "Not Started",
+            "In Progress",
             None,
             0.0,
-            "Pending account activation",
-            "Set up LMS account & send module access link today",
+            "Account registration in progress",
+            "Process LMS portal registration & send login access link today",
             datetime.date(2026, 9, 15),
-            "Attended ADD yesterday Sept 14, 2026. Will set up her LMS today."
+            "Attended ADD yesterday Sept 14, 2026. Processing her LMS onboarding today."
         ),
         (
             "REC-002",
             "Bagiuos, Michael",
             "", "", "",
-            datetime.date(2026, 9, 15),
-            None,
-            "Pending",
-            None,
-            "Newly added recruit; pending ADD orientation schedule.",
+            datetime.date(2026, 9, 14),
+            datetime.date(2026, 9, 14),
+            "Yes",
+            datetime.date(2026, 9, 14),
+            "Attended ADD on Sept 14; not yet processing LMS.",
             None,
             "Not Started",
             None,
             0.0,
             "",
-            "Confirm ADD schedule & send orientation invite",
+            "Follow up on ADD feedback & check readiness to process LMS",
             datetime.date(2026, 9, 16),
-            "Recruit added to monitoring pipeline."
+            "Attended ADD yesterday Sept 14, 2026. Pending decision to proceed with LMS."
         ),
         (
             "REC-003",
             "Barilea, Alona",
             "", "", "",
-            datetime.date(2026, 9, 15),
-            None,
-            "Pending",
-            None,
-            "Newly added recruit; pending ADD orientation schedule.",
+            datetime.date(2026, 9, 14),
+            datetime.date(2026, 9, 14),
+            "Yes",
+            datetime.date(2026, 9, 14),
+            "Attended ADD on Sept 14; not yet processing LMS.",
             None,
             "Not Started",
             None,
             0.0,
             "",
-            "Confirm ADD schedule & send orientation invite",
+            "Follow up on ADD feedback & check readiness to process LMS",
             datetime.date(2026, 9, 16),
-            "Recruit added to monitoring pipeline."
+            "Attended ADD yesterday Sept 14, 2026. Pending decision to proceed with LMS."
         ),
         (
             "REC-004",
             "Garrucha, Lorenz",
             "", "", "",
-            datetime.date(2026, 9, 15),
-            None,
-            "Pending",
-            None,
-            "Newly added recruit; pending ADD orientation schedule.",
+            datetime.date(2026, 9, 14),
+            datetime.date(2026, 9, 14),
+            "Yes",
+            datetime.date(2026, 9, 14),
+            "Attended ADD on Sept 14; not yet processing LMS.",
             None,
             "Not Started",
             None,
             0.0,
             "",
-            "Confirm ADD schedule & send orientation invite",
+            "Follow up on ADD feedback & check readiness to process LMS",
             datetime.date(2026, 9, 16),
-            "Recruit added to monitoring pipeline."
+            "Attended ADD yesterday Sept 14, 2026. Pending decision to proceed with LMS."
         ),
         (
             "REC-005",
             "Ambos, Princess",
             "", "", "",
-            datetime.date(2026, 9, 15),
-            None,
-            "Pending",
-            None,
-            "Newly added recruit; pending ADD orientation schedule.",
+            datetime.date(2026, 9, 14),
+            datetime.date(2026, 9, 14),
+            "Yes",
+            datetime.date(2026, 9, 14),
+            "Attended ADD on Sept 14; not yet processing LMS.",
             None,
             "Not Started",
             None,
             0.0,
             "",
-            "Confirm ADD schedule & send orientation invite",
+            "Follow up on ADD feedback & check readiness to process LMS",
             datetime.date(2026, 9, 16),
-            "Recruit added to monitoring pipeline."
+            "Attended ADD yesterday Sept 14, 2026. Pending decision to proceed with LMS."
         ),
         (
             "REC-006",
             "Montano, Jezreel Kate",
             "", "", "",
-            datetime.date(2026, 9, 15),
-            None,
-            "Pending",
-            None,
-            "Newly added recruit; pending ADD orientation schedule.",
+            datetime.date(2026, 9, 14),
+            datetime.date(2026, 9, 14),
+            "Yes",
+            datetime.date(2026, 9, 14),
+            "Attended ADD on Sept 14; not yet processing LMS.",
             None,
             "Not Started",
             None,
             0.0,
             "",
-            "Confirm ADD schedule & send orientation invite",
+            "Follow up on ADD feedback & check readiness to process LMS",
             datetime.date(2026, 9, 16),
-            "Recruit added to monitoring pipeline."
+            "Attended ADD yesterday Sept 14, 2026. Pending decision to proceed with LMS."
         ),
     ]
 
