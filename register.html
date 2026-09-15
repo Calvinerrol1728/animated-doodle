@@ -152,7 +152,7 @@
     /* Success View */
     .success-card {
       display: none;
-      padding: 3rem 2rem;
+      padding: 2.5rem 2rem;
       text-align: center;
     }
     .success-icon {
@@ -176,19 +176,29 @@
     .success-card p {
       font-size: 0.9rem;
       color: #475569;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       line-height: 1.6;
     }
+    .email-alert-box {
+      background: #EFF6FF;
+      border: 1.5px solid #BFDBFE;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1.25rem 0;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+    .email-alert-box strong { color: #1E40AF; }
     .recruit-badge {
       display: inline-block;
       background: #EBF4FF;
       color: #1E40AF;
       border: 1px solid #BFDBFE;
-      padding: 0.5rem 1.25rem;
+      padding: 0.45rem 1.15rem;
       border-radius: 20px;
       font-weight: 700;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
     }
     .btn-secondary {
       background: #F1F5F9;
@@ -199,11 +209,29 @@
       font-size: 0.85rem;
       font-weight: 600;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
       cursor: pointer;
       margin-top: 0.5rem;
     }
     .btn-secondary:hover { background: #E2E8F0; }
+    .btn-primary-small {
+      background: #2563EB;
+      color: white;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    .btn-primary-small:hover { background: #1D4ED8; }
     footer {
       margin-top: 1.5rem;
       text-align: center;
@@ -249,8 +277,8 @@
 
         <div class="form-group">
           <label for="recruiter">Who invited you / Recruiter Name <span class="req">*</span></label>
-          <input type="text" id="recruiter" name="recruiter" placeholder="e.g. Calvin / Sarah Jenkins / Team Leader" required>
-          <div class="helper-text">Name of the advisor or manager who introduced you to this career preview.</div>
+          <input type="text" id="recruiter" name="recruiter" value="Cedric (cedric.axa1@gmail.com)" required>
+          <div class="helper-text">Your orientation coordinator & recruiter.</div>
         </div>
 
         <div class="form-group">
@@ -309,22 +337,37 @@
       <div class="success-icon">✓</div>
       <h2>Registration Confirmed!</h2>
       <p id="successMessage">Thank you! Your Agency Discovery Day orientation slot has been reserved.</p>
+      
       <div>
         <div class="recruit-badge" id="successRecruitId">Recruit ID: REC-007</div>
       </div>
-      <p style="font-size: 0.85rem; color: #64748B;">
-        Your information has been automatically logged into the agency monitoring tracker.<br>
-        Your inviter will contact you with the Zoom webinar link and session reminders.
-      </p>
-      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-        <button onclick="resetForm()" class="btn-secondary">Register Another Candidate</button>
-        <a href="/" class="btn-secondary">View Monitoring Dashboard</a>
+
+      <div class="email-alert-box">
+        <div style="font-weight: 700; color: #1E40AF; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+          <span>📧</span> Confirmation Email Dispatched!
+        </div>
+        <div>
+          <strong>From:</strong> Cedric (<a href="mailto:cedric.axa1@gmail.com" style="color:#2563EB;">cedric.axa1@gmail.com</a>)<br>
+          <strong>To:</strong> <span id="emailRecipient"></span><br>
+          <strong>Subject:</strong> Thank You for Registering for Agency Discovery Day (ADD)! | Cedric
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem;">
+        <a id="viewEmailBtn" href="#" target="_blank" class="btn-primary-small">
+          👁️ Preview Sent Email
+        </a>
+        <a id="openMailtoBtn" href="#" class="btn-secondary">
+          📧 Open in Mail App
+        </a>
+        <button onclick="resetForm()" class="btn-secondary">Register Another</button>
+        <a href="/" class="btn-secondary">Go to Dashboard</a>
       </div>
     </div>
   </div>
 
   <footer>
-    Recruit Monitoring System &copy; 2026 | ADD & LMS Onboarding Pipeline
+    Recruit Monitoring System &copy; 2026 | Coordinator: Cedric (<a href="mailto:cedric.axa1@gmail.com" style="color:#2563EB;">cedric.axa1@gmail.com</a>)
   </footer>
 
   <script>
@@ -332,7 +375,7 @@
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
-      btn.innerHTML = '<span>Saving to Monitoring Sheet...</span>';
+      btn.innerHTML = '<span>Saving to Excel & Sending Email...</span>';
 
       const formData = {
         name: document.getElementById('fullName').value.trim(),
@@ -357,7 +400,13 @@
           document.getElementById('formContainer').style.display = 'none';
           document.getElementById('successCard').style.display = 'block';
           document.getElementById('successRecruitId').textContent = `Recruit ID: ${result.recruit_id}`;
-          document.getElementById('successMessage').textContent = `Thank you, ${formData.name}! Your Agency Discovery Day (ADD) slot for ${formData.add_date} has been confirmed and added to the Excel monitoring sheet.`;
+          document.getElementById('successMessage').textContent = `Thank you, ${formData.name}! You are registered for the Agency Discovery Day (ADD) session on ${formData.add_date} and logged into the monitoring sheet.`;
+          document.getElementById('emailRecipient').textContent = formData.email;
+
+          if (result.email) {
+            document.getElementById('viewEmailBtn').href = result.email.outbox_path;
+            document.getElementById('openMailtoBtn').href = result.email.mailto;
+          }
         } else {
           alert("Error: " + (result.error || "Failed to register. Please try again."));
           btn.disabled = false;
@@ -373,6 +422,7 @@
 
     function resetForm() {
       document.getElementById('addRegistrationForm').reset();
+      document.getElementById('recruiter').value = "Cedric (cedric.axa1@gmail.com)";
       document.getElementById('formContainer').style.display = 'block';
       document.getElementById('successCard').style.display = 'none';
       const btn = document.getElementById('submitBtn');

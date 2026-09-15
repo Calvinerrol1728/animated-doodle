@@ -146,7 +146,7 @@ def add_registration_form_tab(wb):
     ws["A15"] = "Invited By (Recruiter):"
     ws["A15"].font = font_label
     ws.merge_cells("B15:C15")
-    ws["B15"] = "Recruiter / Unit Manager Name"
+    ws["B15"] = "Cedric (cedric.axa1@gmail.com)"
     ws["B15"].font = font_muted
     ws["B15"].border = underline_border
 
@@ -425,7 +425,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
         (
             "REC-001",
             "Grandes, Maybe",
-            "", "", "",
+            "", "", "Cedric (cedric.axa1@gmail.com)",
             datetime.date(2026, 9, 14),
             datetime.date(2026, 9, 14),
             "Yes",
@@ -443,7 +443,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
         (
             "REC-002",
             "Bagiuos, Michael",
-            "", "", "",
+            "", "", "Cedric (cedric.axa1@gmail.com)",
             datetime.date(2026, 9, 14),
             datetime.date(2026, 9, 14),
             "Yes",
@@ -461,7 +461,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
         (
             "REC-003",
             "Barilea, Alona",
-            "", "", "",
+            "", "", "Cedric (cedric.axa1@gmail.com)",
             datetime.date(2026, 9, 14),
             datetime.date(2026, 9, 14),
             "Yes",
@@ -479,7 +479,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
         (
             "REC-004",
             "Garrucha, Lorenz",
-            "", "", "",
+            "", "", "Cedric (cedric.axa1@gmail.com)",
             datetime.date(2026, 9, 14),
             datetime.date(2026, 9, 14),
             "Yes",
@@ -497,7 +497,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
         (
             "REC-005",
             "Ambos, Princess",
-            "", "", "",
+            "", "", "Cedric (cedric.axa1@gmail.com)",
             datetime.date(2026, 9, 14),
             datetime.date(2026, 9, 14),
             "Yes",
@@ -515,7 +515,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
         (
             "REC-006",
             "Montano, Jezreel Kate",
-            "", "", "",
+            "", "", "Cedric (cedric.axa1@gmail.com)",
             datetime.date(2026, 9, 14),
             datetime.date(2026, 9, 14),
             "Yes",
@@ -1089,6 +1089,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
     ws3["H5"].border = header_border
 
     recruiters_cfg = [
+        ("Cedric (cedric.axa1@gmail.com)", "Agency Leader / Recruiter"),
         ("Sarah Jenkins (UM)", "Unit Manager / Agency Leader"),
         ("David Tan", "Senior Financial Advisor / Recruiter"),
         ("Elena Gomez", "Agency Recruitment Specialist"),

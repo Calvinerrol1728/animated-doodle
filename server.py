@@ -6,6 +6,7 @@ import urllib.parse
 import openpyxl
 import datetime
 import csv
+import email_service
 
 PORT = 8080
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
@@ -43,7 +44,7 @@ def get_recruits_data():
             "name": name,
             "phone": ws1[f"C{r}"].value or "-",
             "email": ws1[f"D{r}"].value or "-",
-            "recruiter": ws1[f"E{r}"].value or "-",
+            "recruiter": ws1[f"E{r}"].value or "Cedric (cedric.axa1@gmail.com)",
             "sourced_date": str(ws1[f"F{r}"].value)[:10] if ws1[f"F{r}"].value else "",
             "add_sched": str(ws1[f"G{r}"].value)[:10] if ws1[f"G{r}"].value else "",
             "attended_add": ws1[f"H{r}"].value or "-",
@@ -80,7 +81,7 @@ def register_recruit_to_excel(data):
     full_name = data.get("name", "").strip()
     phone = data.get("phone", "").strip()
     email = data.get("email", "").strip()
-    recruiter = data.get("recruiter", "").strip()
+    recruiter = data.get("recruiter", "").strip() or "Cedric (cedric.axa1@gmail.com)"
     add_date_str = data.get("add_date", "").strip()
     occupation = data.get("occupation", "").strip()
     interest = data.get("interest", "").strip()
@@ -120,8 +121,8 @@ def register_recruit_to_excel(data):
     ws1[f"P{next_row}"] = f'=IF(B{next_row}="","",IF(L{next_row}="Yes","LMS Completed (Ready for Exam)",IF(L{next_row}="In Progress","LMS In Progress",IF(H{next_row}="Yes","ADD Attended - Awaiting LMS",IF(H{next_row}="Rescheduled","ADD Rescheduled",IF(H{next_row}="Pending","ADD Scheduled",IF(H{next_row}="No","ADD Missed - Follow Up","Initial Prospect")))))))'
     ws1[f"Q{next_row}"] = next_action
     ws1[f"R{next_row}"] = add_date if attended_status == "Pending" else today + datetime.timedelta(days=1)
-    notes_part = f" Note: {questions}" if questions else ""
-    ws1[f"S{next_row}"] = f"Online registration submitted for ADD session on {add_date}.{notes_part}"
+    notes_part = f" Note: {questions}." if questions else ""
+    ws1[f"S{next_row}"] = f"Online registration for ADD on {add_date}. Thank-you email sent from cedric.axa1@gmail.com.{notes_part}"
 
     # Formats
     for col_l in ["F", "G", "I", "K", "M", "R"]:
@@ -129,6 +130,9 @@ def register_recruit_to_excel(data):
     ws1[f"N{next_row}"].number_format = "0.0%"
 
     wb.save(excel_path)
+
+    # Send / log thank-you email from cedric.axa1@gmail.com
+    email_result = email_service.send_thank_you_email(full_name, email, recruit_id, str(add_date))
 
     # Append to CSV export
     try:
@@ -159,7 +163,7 @@ def register_recruit_to_excel(data):
     except Exception as e:
         print(f"Error updating CSV: {e}")
 
-    return recruit_id
+    return recruit_id, email_result
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def do_HEAD(self):
@@ -198,6 +202,18 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(content)
                 return
+        elif parsed.path.startswith("/outbox/"):
+            filename = os.path.basename(parsed.path)
+            file_path = os.path.join(DIRECTORY, "outbox", filename)
+            if os.path.exists(file_path):
+                with open(file_path, "rb") as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+                return
         elif parsed.path in ["/download", "/Recruit_Monitoring_Tracker.xlsx"]:
             filepath = os.path.join(DIRECTORY, "Recruit_Monitoring_Tracker.xlsx")
             if os.path.exists(filepath):
@@ -221,7 +237,6 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             try:
                 data = json.loads(post_body.decode("utf-8"))
             except Exception:
-                # Handle form urlencoded
                 parsed_dict = urllib.parse.parse_qs(post_body.decode("utf-8"))
                 data = {k: v[0] for k, v in parsed_dict.items()}
 
@@ -233,7 +248,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 return
 
             try:
-                new_id = register_recruit_to_excel(data)
+                new_id, email_res = register_recruit_to_excel(data)
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
                 self.send_header("Access-Control-Allow-Origin", "*")
@@ -241,7 +256,8 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({
                     "success": True,
                     "recruit_id": new_id,
-                    "message": f"Successfully registered {data.get('name')}! Assigned ID: {new_id}."
+                    "message": f"Successfully registered {data.get('name')}! Assigned ID: {new_id}.",
+                    "email": email_res
                 }).encode("utf-8"))
             except Exception as e:
                 self.send_response(500)

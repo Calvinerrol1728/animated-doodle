@@ -479,7 +479,7 @@
           </div>
           <div class="form-group">
             <label>Recruiter / Invited By *</label>
-            <input type="text" id="d-recruiter" class="form-control" placeholder="e.g. Calvin / Team Leader" required>
+            <input type="text" id="d-recruiter" class="form-control" value="Cedric (cedric.axa1@gmail.com)" required>
           </div>
           <div class="form-group">
             <label>Preferred ADD Session Date *</label>
@@ -768,8 +768,9 @@
         });
         const result = await res.json();
         if (result.success) {
-          alert(`Success! ${payload.name} has been added to your Excel sheet with ID: ${result.recruit_id}`);
+          alert(`Success! ${payload.name} has been added to your Excel sheet with ID: ${result.recruit_id}!\n\nA thank-you confirmation email from Cedric (cedric.axa1@gmail.com) has been dispatched to ${payload.email}.`);
           document.getElementById('dashRegisterForm').reset();
+          document.getElementById('d-recruiter').value = "Cedric (cedric.axa1@gmail.com)";
           await loadData();
           switchTab('tracker');
         } else {
