@@ -161,7 +161,7 @@ def add_registration_form_tab(wb):
     ws["A16"] = "Preferred ADD Session:"
     ws["A16"].font = font_label
     ws.merge_cells("B16:C16")
-    ws["B16"] = "[ ] Saturday Morning (10 AM)   [ ] Saturday Afternoon (2 PM)"
+    ws["B16"] = "[X] Thursday, Sept 17, 2026 (Next ADD)   [ ] Special / Alternate Date"
     ws["B16"].font = font_value
     ws["B16"].border = underline_border
 
@@ -894,7 +894,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
         cell.border = header_border
     ws2.row_dimensions[21].height = 24
 
-    recruiters = ["Sarah Jenkins (UM)", "David Tan", "Elena Gomez", "Michael Chang"]
+    recruiters = ["Cedric (cedric.axa1@gmail.com)", "Sarah Jenkins (UM)", "David Tan", "Elena Gomez"]
     for idx, name in enumerate(recruiters, start=22):
         bg = "FFFFFF" if idx%2==0 else "F8FAFC"
         r_fill = PatternFill(start_color=bg, end_color=bg, fill_type="solid")

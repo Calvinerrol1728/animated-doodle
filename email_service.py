@@ -187,5 +187,5 @@ def send_thank_you_email(candidate_name, candidate_email, recruit_id, add_date):
     }
 
 if __name__ == "__main__":
-    result = send_thank_you_email("Maria Santos", "maria.santos@gmail.com", "REC-007", "2026-09-19")
+    result = send_thank_you_email("Maria Santos", "maria.santos@gmail.com", "REC-007", "2026-09-17")
     print("Test email processed:", result)

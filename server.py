@@ -91,7 +91,7 @@ def register_recruit_to_excel(data):
     try:
         add_date = datetime.datetime.strptime(add_date_str, "%Y-%m-%d").date()
     except Exception:
-        add_date = datetime.date(2026, 9, 19)
+        add_date = datetime.date(2026, 9, 17)
 
     # Check if date attended
     if add_date < today:

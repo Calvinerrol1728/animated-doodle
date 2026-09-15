@@ -40,16 +40,17 @@ Recruits can now register themselves online! When a candidate submits the regist
 | **REC-005** | **Ambos, Princess** | `Yes` | 2026-09-14 | `Not Started` | — | `ADD Attended - Awaiting LMS` | Follow up on ADD feedback & check readiness to process LMS |
 | **REC-006** | **Montano, Jezreel Kate** | `Yes` | 2026-09-14 | `Not Started` | — | `ADD Attended - Awaiting LMS` | Follow up on ADD feedback & check readiness to process LMS |
 
-*New registrants from the online form will automatically be added as `REC-007` on row 15.*
+*New registrants from the online form default to the next session on **Thursday, September 17, 2026** and will automatically be added as `REC-007` on row 15.*
 
 ---
 
-## 📊 Workbook Structure (4 Dedicated Sheets)
+## 📊 Workbook Structure (5 Dedicated Sheets)
 
 1. **`Recruit Monitoring Tracker`** (Main tracking sheet with Top KPI Cards, candidate details, ADD attendance, LMS completion, and automated pipeline stage formulas).
-2. **`Recruitment Dashboard`** (Funnel conversion analysis, column chart, status breakdown tables, LMS pie chart, and recruiter performance roster).
+2. **`Recruitment Dashboard`** (Funnel conversion analysis, column chart, status breakdown tables, LMS pie chart, and recruiter performance roster featuring Cedric).
 3. **`Dropdowns & Settings`** (Reference lists and glossary for dropdown menus).
 4. **`User Guide & Workflow`** (Operating manual and insurance recruitment best practices).
+5. **`ADD Registration Form`** (Printable 1-page intake slip with official styling, checkbox fields for Thursday, Sept 17 session, and signature area).
 
 ---
 
