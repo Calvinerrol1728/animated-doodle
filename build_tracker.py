@@ -155,60 +155,154 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
 
     ws1.row_dimensions[8].height = 30
 
-    # The ONLY encoded recruit requested: Maybe Grandes
-    # Attended ADD yesterday Sept 14, 2026 and will set up her LMS today (Sept 15, 2026)
-    encoded_recruit = (
-        "REC-001",
-        "Grandes, Maybe",                # Complete Name (Last Name, First Name)
-        "",                              # Contact Number (leave blank for user to add)
-        "",                              # Email Address (leave blank for user to add)
-        "",                              # Sourced By (leave blank for user to add)
-        datetime.date(2026, 9, 14),      # Date Sourced
-        datetime.date(2026, 9, 14),      # ADD Scheduled Date (yesterday Sept 14, 2026)
-        "Yes",                           # Attended ADD? -> Yes!
-        datetime.date(2026, 9, 14),      # ADD Attendance Date (yesterday Sept 14, 2026)
-        "Attended ADD on Sept 14; confirmed interest. Preparing for LMS setup.", # ADD Remarks
-        datetime.date(2026, 9, 15),      # LMS Access Date (Today Sept 15, 2026)
-        "Not Started",                   # Completed LMS? -> Not Started (setting up today)
-        None,                            # LMS Completion Date (not yet)
-        0.0,                             # LMS Progress % -> 0%
-        "Pending account activation",    # LMS Score / Certificate
-        # Pipeline Stage: automated formula
-        "Set up LMS account & send module access link today", # Next Action Required
-        datetime.date(2026, 9, 15),      # Target Follow-up Date (Today)
-        "Attended ADD yesterday Sept 14, 2026. Will set up her LMS today." # Recruiter Notes
-    )
+    # User's Encoded Recruits:
+    # 1. Maybe Grandes (Attended ADD Sept 14, setting up LMS today)
+    # 2. Michael Bagiuos
+    # 3. Alona Barilea
+    # 4. Lorenz Garrucha
+    # 5. Princess Ambos
+    # 6. Jezreel Kate Montano
+    recruits_list = [
+        (
+            "REC-001",
+            "Grandes, Maybe",
+            "", "", "",
+            datetime.date(2026, 9, 14),
+            datetime.date(2026, 9, 14),
+            "Yes",
+            datetime.date(2026, 9, 14),
+            "Attended ADD on Sept 14; confirmed interest. Preparing for LMS setup.",
+            datetime.date(2026, 9, 15),
+            "Not Started",
+            None,
+            0.0,
+            "Pending account activation",
+            "Set up LMS account & send module access link today",
+            datetime.date(2026, 9, 15),
+            "Attended ADD yesterday Sept 14, 2026. Will set up her LMS today."
+        ),
+        (
+            "REC-002",
+            "Bagiuos, Michael",
+            "", "", "",
+            datetime.date(2026, 9, 15),
+            None,
+            "Pending",
+            None,
+            "Newly added recruit; pending ADD orientation schedule.",
+            None,
+            "Not Started",
+            None,
+            0.0,
+            "",
+            "Confirm ADD schedule & send orientation invite",
+            datetime.date(2026, 9, 16),
+            "Recruit added to monitoring pipeline."
+        ),
+        (
+            "REC-003",
+            "Barilea, Alona",
+            "", "", "",
+            datetime.date(2026, 9, 15),
+            None,
+            "Pending",
+            None,
+            "Newly added recruit; pending ADD orientation schedule.",
+            None,
+            "Not Started",
+            None,
+            0.0,
+            "",
+            "Confirm ADD schedule & send orientation invite",
+            datetime.date(2026, 9, 16),
+            "Recruit added to monitoring pipeline."
+        ),
+        (
+            "REC-004",
+            "Garrucha, Lorenz",
+            "", "", "",
+            datetime.date(2026, 9, 15),
+            None,
+            "Pending",
+            None,
+            "Newly added recruit; pending ADD orientation schedule.",
+            None,
+            "Not Started",
+            None,
+            0.0,
+            "",
+            "Confirm ADD schedule & send orientation invite",
+            datetime.date(2026, 9, 16),
+            "Recruit added to monitoring pipeline."
+        ),
+        (
+            "REC-005",
+            "Ambos, Princess",
+            "", "", "",
+            datetime.date(2026, 9, 15),
+            None,
+            "Pending",
+            None,
+            "Newly added recruit; pending ADD orientation schedule.",
+            None,
+            "Not Started",
+            None,
+            0.0,
+            "",
+            "Confirm ADD schedule & send orientation invite",
+            datetime.date(2026, 9, 16),
+            "Recruit added to monitoring pipeline."
+        ),
+        (
+            "REC-006",
+            "Montano, Jezreel Kate",
+            "", "", "",
+            datetime.date(2026, 9, 15),
+            None,
+            "Pending",
+            None,
+            "Newly added recruit; pending ADD orientation schedule.",
+            None,
+            "Not Started",
+            None,
+            0.0,
+            "",
+            "Confirm ADD schedule & send orientation invite",
+            datetime.date(2026, 9, 16),
+            "Recruit added to monitoring pipeline."
+        ),
+    ]
 
-    # Populate Row 9 (Maybe Grandes) and Rows 10 to 65 (Clean blank template rows)
+    # Populate Rows 9 to 65
     for r in range(9, 66):
+        is_encoded = (r - 9) < len(recruits_list)
         bg_hex = "FFFFFF" if r % 2 == 1 else "F8FAFC"
         row_fill = PatternFill(start_color=bg_hex, end_color=bg_hex, fill_type="solid")
         ws1.row_dimensions[r].height = 22
 
-        if r == 9:
-            # Encode Maybe Grandes
-            ws1[f"A{r}"] = encoded_recruit[0]
-            ws1[f"B{r}"] = encoded_recruit[1]
-            ws1[f"C{r}"] = encoded_recruit[2]
-            ws1[f"D{r}"] = encoded_recruit[3]
-            ws1[f"E{r}"] = encoded_recruit[4]
-            ws1[f"F{r}"] = encoded_recruit[5]
-            ws1[f"G{r}"] = encoded_recruit[6]
-            ws1[f"H{r}"] = encoded_recruit[7]
-            ws1[f"I{r}"] = encoded_recruit[8]
-            ws1[f"J{r}"] = encoded_recruit[9]
-            ws1[f"K{r}"] = encoded_recruit[10]
-            ws1[f"L{r}"] = encoded_recruit[11]
-            ws1[f"M{r}"] = encoded_recruit[12]
-            ws1[f"N{r}"] = encoded_recruit[13]
-            ws1[f"O{r}"] = encoded_recruit[14]
+        if is_encoded:
+            data = recruits_list[r - 9]
+            ws1[f"A{r}"] = data[0]
+            ws1[f"B{r}"] = data[1]
+            ws1[f"C{r}"] = data[2]
+            ws1[f"D{r}"] = data[3]
+            ws1[f"E{r}"] = data[4]
+            ws1[f"F{r}"] = data[5]
+            ws1[f"G{r}"] = data[6]
+            ws1[f"H{r}"] = data[7]
+            ws1[f"I{r}"] = data[8]
+            ws1[f"J{r}"] = data[9]
+            ws1[f"K{r}"] = data[10]
+            ws1[f"L{r}"] = data[11]
+            ws1[f"M{r}"] = data[12]
+            ws1[f"N{r}"] = data[13]
+            ws1[f"O{r}"] = data[14]
             ws1[f"P{r}"] = f'=IF(B{r}="","",IF(L{r}="Yes","LMS Completed (Ready for Exam)",IF(L{r}="In Progress","LMS In Progress",IF(H{r}="Yes","ADD Attended - Awaiting LMS",IF(H{r}="Rescheduled","ADD Rescheduled",IF(H{r}="Pending","ADD Scheduled",IF(H{r}="No","ADD Missed - Follow Up","Initial Prospect")))))))'
-            ws1[f"Q{r}"] = encoded_recruit[15]
-            ws1[f"R{r}"] = encoded_recruit[16]
-            ws1[f"S{r}"] = encoded_recruit[17]
+            ws1[f"Q{r}"] = data[15]
+            ws1[f"R{r}"] = data[16]
+            ws1[f"S{r}"] = data[17]
         else:
-            # All other rows are left completely blank!
-            # The Recruit ID and Pipeline Stage formulas activate automatically as soon as a name is typed into Column B
+            # Clean pre-formatted blank template rows
             ws1[f"A{r}"] = f'=IF(B{r}="","","REC-"&TEXT({r}-8,"000"))'
             ws1[f"B{r}"] = ""
             ws1[f"C{r}"] = ""
@@ -834,7 +928,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
             ("Attendance Rate %", "Calculates Attended ADD / Total Recruits Sourced. Benchmark target is >= 70%."),
             ("Completion Rate %", "Calculates Completed LMS / Attended ADD. Benchmark target is >= 60%."),
             ("Funnel Conversion %", "Calculates Completed LMS / Total Recruits Sourced. Benchmark target is >= 40%."),
-            ("Adding New Recruits", "Rows 10 to 65 are pre-formatted with all dropdowns, formulas, and borders. Simply start typing in Column B (Complete Name), and the entire row will activate automatically!"),
+            ("Adding New Recruits", "Rows 15 to 65 are pre-formatted with all dropdowns, formulas, and borders. Simply start typing in Column B (Complete Name), and the entire row will activate automatically!"),
         ]),
         ("4. BEST PRACTICES FOR RECRUITING SUCCESS", [
             ("The 24-Hour Rule", "Reach out to ADD attendees within 24 hours while interest is fresh to set up LMS credentials."),
