@@ -21,10 +21,12 @@ def generate_email_content(candidate_name, candidate_email, recruit_id, add_date
         display_session_date = "Thursday, September 24, 2026 at 7:00 PM"
     elif "2026-10-01" in str(add_date):
         display_session_date = "Thursday, October 01, 2026 at 7:00 PM"
-    elif "2026-09-14" in str(add_date):
-        display_session_date = "Monday, September 14, 2026"
+    elif "2026-10-08" in str(add_date):
+        display_session_date = "Thursday, October 08, 2026 at 7:00 PM"
+    elif "2026-10-15" in str(add_date):
+        display_session_date = "Thursday, October 15, 2026 at 7:00 PM"
     else:
-        display_session_date = f"{add_date} at 7:00 PM"
+        display_session_date = f"{add_date} (Thursday 7:00 PM)"
 
     text_body = f"""Dear {candidate_name},
 
@@ -34,6 +36,7 @@ Your registration has been successfully confirmed and recorded in our recruit mo
 • Candidate Name: {candidate_name}
 • Candidate ID: {recruit_id}
 • Scheduled ADD Session: {display_session_date}
+• Schedule Note: ADD sessions are conducted exclusively on Thursday evenings at 7:00 PM
 • Host / Recruiter: {SENDER_NAME} ({SENDER_EMAIL})
 
 WHAT YOU WILL DISCOVER DURING THE AGENCY DISCOVERY DAY (ADD):
