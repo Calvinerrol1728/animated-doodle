@@ -274,6 +274,19 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(content)
                 return
+        elif parsed.path in ["/download-zip", "/ADD_Recruitment_Package.zip"]:
+            filepath = os.path.join(DIRECTORY, "ADD_Recruitment_Package.zip")
+            if os.path.exists(filepath):
+                with open(filepath, "rb") as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "application/zip")
+                self.send_header("Content-Disposition", 'attachment; filename="ADD_Recruitment_Package.zip"')
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+                return
         # Default static file serving
         super().do_GET()
 
