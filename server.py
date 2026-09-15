@@ -6,6 +6,7 @@ import urllib.parse
 import openpyxl
 import datetime
 import csv
+import base64
 import email_service
 
 PORT = 8080
@@ -180,13 +181,42 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(data).encode("utf-8"))
             return
-        elif parsed.path == "/register":
+        elif parsed.path == "/api/download-excel-base64":
+            filepath = os.path.join(DIRECTORY, "Recruit_Monitoring_Tracker.xlsx")
+            if os.path.exists(filepath):
+                with open(filepath, "rb") as f:
+                    b64_content = base64.b64encode(f.read()).decode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({
+                    "filename": "Recruit_Monitoring_Tracker.xlsx",
+                    "base64": b64_content
+                }).encode("utf-8"))
+                return
+        elif parsed.path == "/api/download-form-base64":
+            filepath = os.path.join(DIRECTORY, "register.html")
+            if os.path.exists(filepath):
+                with open(filepath, "rb") as f:
+                    b64_content = base64.b64encode(f.read()).decode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({
+                    "filename": "ADD_Registration_Form.html",
+                    "base64": b64_content
+                }).encode("utf-8"))
+                return
+        elif parsed.path in ["/register", "/register.html"]:
             register_path = os.path.join(DIRECTORY, "register.html")
             if os.path.exists(register_path):
                 with open(register_path, "rb") as f:
                     content = f.read()
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Access-Control-Allow-Origin", "*")
                 self.send_header("Content-Length", str(len(content)))
                 self.end_headers()
                 self.wfile.write(content)
@@ -199,6 +229,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
                 self.send_header("Content-Disposition", 'attachment; filename="ADD_Registration_Form.html"')
+                self.send_header("Access-Control-Allow-Origin", "*")
                 self.send_header("Content-Length", str(len(content)))
                 self.end_headers()
                 self.wfile.write(content)
@@ -211,6 +242,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                     content = f.read()
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Access-Control-Allow-Origin", "*")
                 self.send_header("Content-Length", str(len(content)))
                 self.end_headers()
                 self.wfile.write(content)
@@ -223,6 +255,21 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 self.send_header("Content-Disposition", 'attachment; filename="Recruit_Monitoring_Tracker.xlsx"')
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Access-Control-Expose-Headers", "Content-Disposition, Content-Length")
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+                return
+        elif parsed.path in ["/download-csv", "/Recruit_Monitoring_Export.csv"]:
+            filepath = os.path.join(DIRECTORY, "Recruit_Monitoring_Export.csv")
+            if os.path.exists(filepath):
+                with open(filepath, "rb") as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "text/csv; charset=utf-8")
+                self.send_header("Content-Disposition", 'attachment; filename="Recruit_Monitoring_Export.csv"')
+                self.send_header("Access-Control-Allow-Origin", "*")
                 self.send_header("Content-Length", str(len(content)))
                 self.end_headers()
                 self.wfile.write(content)
@@ -244,6 +291,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             if not data.get("name"):
                 self.send_response(400)
                 self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers()
                 self.wfile.write(json.dumps({"success": False, "error": "Candidate name is required."}).encode("utf-8"))
                 return
@@ -263,6 +311,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             except Exception as e:
                 self.send_response(500)
                 self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers()
                 self.wfile.write(json.dumps({"success": False, "error": str(e)}).encode("utf-8"))
             return

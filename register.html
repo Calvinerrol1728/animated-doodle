@@ -245,9 +245,9 @@
   <div class="wrapper">
     <div class="hero-banner">
       <div style="position: absolute; top: 1rem; right: 1rem;">
-        <a href="/download-form" download="ADD_Registration_Form.html" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.75rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem;">
+        <button onclick="saveHtmlFile(event)" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer;">
           📥 Download Form (.html)
-        </a>
+        </button>
       </div>
       <div class="hero-badge">Next ADD: Thursday, September 17, 2026 at 7:00 PM</div>
       <h1>Agency Discovery Day (ADD)</h1>
@@ -418,6 +418,20 @@
         btn.disabled = false;
         btn.innerHTML = '<span>Complete ADD Registration</span>';
       }
+    }
+
+    function saveHtmlFile(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'ADD_Registration_Form.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     function resetForm() {

@@ -339,24 +339,21 @@
       </div>
     </div>
     <div class="header-actions">
-      <a href="/register" target="_blank" class="btn-action btn-form">
+      <button onclick="switchTab('register')" class="btn-action btn-form">
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
         </svg>
-        Open Form Link
-      </a>
-      <a href="/download-form" download="ADD_Registration_Form.html" class="btn-action" style="background: #475569; color: white;">
+        📝 Fill Form (Here)
+      </button>
+      <button onclick="triggerExcelDownload(event)" class="btn-action btn-download">
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
         </svg>
-        Download Form (.html)
-      </a>
-      <a href="/Recruit_Monitoring_Tracker.xlsx" download class="btn-action btn-download">
-        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-        </svg>
-        Download Excel (.xlsx)
-      </a>
+        📥 Download Excel (.xlsx)
+      </button>
+      <button onclick="openDownloadModal()" class="btn-action" style="background: #0D9488; color: white;">
+        💾 Download Options
+      </button>
     </div>
   </header>
 
@@ -586,6 +583,25 @@
           <div class="guide-step-title">4. Automatic Pipeline Stage (Col P)</div>
           <div class="guide-step-desc">The stage tag in Column P automatically updates: <em>ADD Scheduled</em> ➔ <em>ADD Attended - Awaiting LMS</em> ➔ <em>LMS In Progress</em> ➔ <em>LMS Completed (Ready for Exam)</em>.</div>
         </div>
+
+        <div style="margin-top: 2rem; padding: 1.5rem; background: #F8FAFC; border-radius: 12px; border: 1.5px solid #E2E8F0;">
+          <h4 style="font-size: 1.1rem; color: #1E293B; margin-bottom: 0.5rem; font-weight: 700;">📥 Direct Download Links</h4>
+          <p style="font-size: 0.85rem; color: #64748B; margin-bottom: 1.25rem;">Download any file directly to your device:</p>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button onclick="triggerExcelDownload(event)" style="background: #16A34A; color: white; border: none; padding: 0.75rem 1.25rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem;">
+              📊 Download Excel (.xlsx)
+            </button>
+            <a href="https://github.com/Calvinerrol1728/animated-doodle/raw/arena/01a0a2ea-animated-doodle/Recruit_Monitoring_Tracker.xlsx" target="_blank" style="background: #1B365D; color: white; text-decoration: none; padding: 0.75rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
+              🐙 GitHub Excel Download
+            </a>
+            <button onclick="triggerFormDownload(event)" style="background: #2563EB; color: white; border: none; padding: 0.75rem 1.25rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem;">
+              📝 Download Form (.html)
+            </button>
+            <a href="/download-csv" download="Recruit_Monitoring_Export.csv" style="background: #475569; color: white; text-decoration: none; padding: 0.75rem 1.25rem; border-radius: 8px; font-weight: 700; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
+              📑 Download CSV Data
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -787,5 +803,102 @@
 
     window.onload = loadData;
   </script>
+
+  <!-- Download Center Modal -->
+  <div id="downloadModal" style="display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div style="background: #FFFFFF; border-radius: 16px; max-width: 560px; width: 100%; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); border: 1px solid #E2E8F0; position: relative;">
+      <button onclick="closeDownloadModal()" style="position: absolute; top: 1rem; right: 1rem; background: #F1F5F9; border: none; font-size: 1.25rem; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; color: #64748B;">✕</button>
+      
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">
+        <div style="width: 44px; height: 44px; background: #DCFCE7; color: #16A34A; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">📥</div>
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 800; color: #0F172A; margin: 0;">Download Center</h3>
+          <p style="font-size: 0.82rem; color: #64748B; margin: 0;">Select your preferred download method</p>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <!-- Option 1: Direct Excel Base64 Download -->
+        <div style="border: 1px solid #E2E8F0; border-radius: 10px; padding: 1rem; background: #F8FAFC; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 700; color: #1E293B; font-size: 0.92rem;">📊 Excel Tracker (.xlsx)</div>
+            <div style="font-size: 0.78rem; color: #64748B;">Official 5-sheet workbook with formulas & KPI cards</div>
+          </div>
+          <button onclick="triggerExcelDownload(event)" style="background: #16A34A; color: white; border: none; padding: 0.55rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">Download</button>
+        </div>
+
+        <!-- Option 2: Direct GitHub Raw Download (100% reliable) -->
+        <div style="border: 1px solid #E2E8F0; border-radius: 10px; padding: 1rem; background: #F8FAFC; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 700; color: #1E293B; font-size: 0.92rem;">🐙 GitHub Direct Link (.xlsx)</div>
+            <div style="font-size: 0.78rem; color: #64748B;">Direct server raw file download from GitHub repository</div>
+          </div>
+          <a href="https://github.com/Calvinerrol1728/animated-doodle/raw/arena/01a0a2ea-animated-doodle/Recruit_Monitoring_Tracker.xlsx" target="_blank" style="background: #1B365D; color: white; text-decoration: none; padding: 0.55rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem;">Download</a>
+        </div>
+
+        <!-- Option 3: Standalone Form (.html) -->
+        <div style="border: 1px solid #E2E8F0; border-radius: 10px; padding: 1rem; background: #F8FAFC; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 700; color: #1E293B; font-size: 0.92rem;">📝 ADD Form (.html)</div>
+            <div style="font-size: 0.78rem; color: #64748B;">Standalone file set to Thursday, Sept 17 at 7:00 PM</div>
+          </div>
+          <button onclick="triggerFormDownload(event)" style="background: #2563EB; color: white; border: none; padding: 0.55rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer;">Download</button>
+        </div>
+
+        <!-- Option 4: CSV Data Export -->
+        <div style="border: 1px solid #E2E8F0; border-radius: 10px; padding: 1rem; background: #F8FAFC; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-weight: 700; color: #1E293B; font-size: 0.92rem;">📑 CSV Export (.csv)</div>
+            <div style="font-size: 0.78rem; color: #64748B;">Opens in any spreadsheet software (Excel, Google Sheets)</div>
+          </div>
+          <a href="/download-csv" download="Recruit_Monitoring_Export.csv" style="background: #64748B; color: white; text-decoration: none; padding: 0.55rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem;">Download</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openDownloadModal() {
+      document.getElementById('downloadModal').style.display = 'flex';
+    }
+    function closeDownloadModal() {
+      document.getElementById('downloadModal').style.display = 'none';
+    }
+
+    async function triggerExcelDownload(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      try {
+        const res = await fetch('/api/download-excel-base64');
+        if (!res.ok) throw new Error("API failed");
+        const data = await res.json();
+        const a = document.createElement('a');
+        a.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + data.base64;
+        a.download = data.filename || 'Recruit_Monitoring_Tracker.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch (err) {
+        window.location.href = 'https://github.com/Calvinerrol1728/animated-doodle/raw/arena/01a0a2ea-animated-doodle/Recruit_Monitoring_Tracker.xlsx';
+      }
+    }
+
+    async function triggerFormDownload(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      try {
+        const res = await fetch('/api/download-form-base64');
+        if (!res.ok) throw new Error("API failed");
+        const data = await res.json();
+        const a = document.createElement('a');
+        a.href = 'data:text/html;base64,' + data.base64;
+        a.download = data.filename || 'ADD_Registration_Form.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch (err) {
+        window.location.href = 'https://github.com/Calvinerrol1728/animated-doodle/raw/arena/01a0a2ea-animated-doodle/register.html';
+      }
+    }
+  </script>
+
 </body>
 </html>
