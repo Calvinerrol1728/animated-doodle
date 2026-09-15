@@ -186,6 +186,18 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(content)
                 return
+        elif parsed.path in ["/download-form", "/ADD_Registration_Form.html"]:
+            register_path = os.path.join(DIRECTORY, "register.html")
+            if os.path.exists(register_path):
+                with open(register_path, "rb") as f:
+                    content = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Disposition", 'attachment; filename="ADD_Registration_Form.html"')
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+                return
         elif parsed.path in ["/download", "/Recruit_Monitoring_Tracker.xlsx"]:
             filepath = os.path.join(DIRECTORY, "Recruit_Monitoring_Tracker.xlsx")
             if os.path.exists(filepath):

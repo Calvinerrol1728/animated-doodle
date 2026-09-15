@@ -6,6 +6,268 @@ from openpyxl.chart import BarChart, PieChart, Reference
 from openpyxl.utils import get_column_letter
 import datetime
 
+def add_registration_form_tab(wb):
+    ws = wb.create_sheet(title="ADD Registration Form")
+    ws.views.sheetView[0].showGridLines = True
+    
+    ws.page_setup.orientation = ws.ORIENTATION_PORTRAIT
+    ws.page_setup.paperSize = ws.PAPERSIZE_LETTER
+    ws.sheet_properties.pageSetUpPr.fitToPage = True
+    ws.page_setup.fitToWidth = 1
+    ws.page_setup.fitToHeight = 1
+
+    font_main_title = Font(name="Calibri", size=15, bold=True, color="FFFFFF")
+    font_sub_title = Font(name="Calibri", size=9.5, italic=True, color="E2E8F0")
+    font_sec_hdr = Font(name="Calibri", size=10, bold=True, color="FFFFFF")
+    font_label = Font(name="Calibri", size=9, bold=True, color="334155")
+    font_value = Font(name="Calibri", size=9.5, color="0F172A")
+    font_box_title = Font(name="Calibri", size=9.5, bold=True, color="1E3A8A")
+    font_muted = Font(name="Calibri", size=8, italic=True, color="64748B")
+
+    border_light = Side(border_style="thin", color="CBD5E1")
+    border_underline = Side(border_style="thin", color="94A3B8")
+    border_box = Border(left=border_light, right=border_light, top=border_light, bottom=border_light)
+    underline_border = Border(bottom=border_underline)
+
+    NAVY = "1B365D"
+    BLUE = "2563EB"
+    BOX_BG = "EFF6FF"
+
+    ws.merge_cells("A1:G1")
+    ws["A1"] = "AGENCY DISCOVERY DAY (ADD) — REGISTRATION FORM"
+    ws["A1"].font = font_main_title
+    ws["A1"].alignment = Alignment(horizontal="center", vertical="center")
+    ws["A1"].fill = PatternFill(start_color=NAVY, end_color=NAVY, fill_type="solid")
+    ws.row_dimensions[1].height = 30
+
+    ws.merge_cells("A2:G2")
+    ws["A2"] = "Candidate Career Orientation Intake Slip | Pre-Licensing Recruitment Pipeline"
+    ws["A2"].font = font_sub_title
+    ws["A2"].alignment = Alignment(horizontal="center", vertical="center")
+    ws["A2"].fill = PatternFill(start_color="244B7A", end_color="244B7A", fill_type="solid")
+    ws.row_dimensions[2].height = 18
+
+    ws.row_dimensions[3].height = 8
+
+    def make_sec_hdr(row, title):
+        ws.merge_cells(f"A{row}:G{row}")
+        ws[f"A{row}"] = title
+        ws[f"A{row}"].font = font_sec_hdr
+        ws[f"A{row}"].alignment = Alignment(horizontal="left", vertical="center", indent=1)
+        ws[f"A{row}"].fill = PatternFill(start_color=BLUE, end_color=BLUE, fill_type="solid")
+        ws.row_dimensions[row].height = 20
+
+    make_sec_hdr(4, "1. CANDIDATE PERSONAL INFORMATION")
+
+    ws["A5"] = "Complete Name:"
+    ws["A5"].font = font_label
+    ws.merge_cells("B5:G5")
+    ws["B5"] = "Last Name, First Name M.I."
+    ws["B5"].font = font_muted
+    ws["B5"].border = underline_border
+    ws.row_dimensions[5].height = 22
+
+    ws["A6"] = "Mobile Number:"
+    ws["A6"].font = font_label
+    ws.merge_cells("B6:C6")
+    ws["B6"] = "+63 9XX XXX XXXX"
+    ws["B6"].font = font_muted
+    ws["B6"].border = underline_border
+
+    ws["D6"] = "Email Address:"
+    ws["D6"].font = font_label
+    ws.merge_cells("E6:G6")
+    ws["E6"] = "candidate@email.com"
+    ws["E6"].font = font_muted
+    ws["E6"].border = underline_border
+    ws.row_dimensions[6].height = 22
+
+    ws["A7"] = "Date of Birth:"
+    ws["A7"].font = font_label
+    ws.merge_cells("B7:C7")
+    ws["B7"] = "YYYY-MM-DD"
+    ws["B7"].font = font_muted
+    ws["B7"].border = underline_border
+
+    ws["D7"] = "Civil Status:"
+    ws["D7"].font = font_label
+    ws.merge_cells("E7:G7")
+    ws["E7"] = "[ ] Single   [ ] Married   [ ] Other"
+    ws["E7"].font = font_value
+    ws["E7"].border = underline_border
+    ws.row_dimensions[7].height = 22
+
+    ws["A8"] = "City / Address:"
+    ws["A8"].font = font_label
+    ws.merge_cells("B8:G8")
+    ws["B8"] = "City, Province"
+    ws["B8"].font = font_muted
+    ws["B8"].border = underline_border
+    ws.row_dimensions[8].height = 22
+
+    ws.row_dimensions[9].height = 6
+
+    make_sec_hdr(10, "2. BACKGROUND & CURRENT OCCUPATION")
+
+    ws["A11"] = "Current Field:"
+    ws["A11"].font = font_label
+    ws.merge_cells("B11:C11")
+    ws["B11"] = "[ ] Employed   [ ] Business   [ ] Freelance"
+    ws["B11"].font = font_value
+    ws["B11"].border = underline_border
+
+    ws["D11"] = "Current Company / Role:"
+    ws["D11"].font = font_label
+    ws.merge_cells("E11:G11")
+    ws["E11"] = "Job Title / Employer"
+    ws["E11"].font = font_muted
+    ws["E11"].border = underline_border
+    ws.row_dimensions[11].height = 22
+
+    ws["A12"] = "Education:"
+    ws["A12"].font = font_label
+    ws.merge_cells("B12:C12")
+    ws["B12"] = "College Degree / Course"
+    ws["B12"].font = font_muted
+    ws["B12"].border = underline_border
+
+    ws["D12"] = "Work Experience:"
+    ws["D12"].font = font_label
+    ws.merge_cells("E12:G12")
+    ws["E12"] = "[ ] <1 yr   [ ] 1-3 yrs   [ ] 3-5 yrs   [ ] 5+ yrs"
+    ws["E12"].font = font_value
+    ws["E12"].border = underline_border
+    ws.row_dimensions[12].height = 22
+
+    ws.row_dimensions[13].height = 6
+
+    make_sec_hdr(14, "3. SOURCING & ADD ORIENTATION SCHEDULE")
+
+    ws["A15"] = "Invited By (Recruiter):"
+    ws["A15"].font = font_label
+    ws.merge_cells("B15:C15")
+    ws["B15"] = "Recruiter / Unit Manager Name"
+    ws["B15"].font = font_muted
+    ws["B15"].border = underline_border
+
+    ws["D15"] = "Date Invited / Sourced:"
+    ws["D15"].font = font_label
+    ws.merge_cells("E15:G15")
+    ws["E15"] = "2026-09-15"
+    ws["E15"].font = font_value
+    ws["E15"].border = underline_border
+    ws.row_dimensions[15].height = 22
+
+    ws["A16"] = "Preferred ADD Session:"
+    ws["A16"].font = font_label
+    ws.merge_cells("B16:C16")
+    ws["B16"] = "[ ] Saturday Morning (10 AM)   [ ] Saturday Afternoon (2 PM)"
+    ws["B16"].font = font_value
+    ws["B16"].border = underline_border
+
+    ws["D16"] = "Orientation Mode:"
+    ws["D16"].font = font_label
+    ws.merge_cells("E16:G16")
+    ws["E16"] = "[ ] Online via Zoom   [ ] Branch / In-Person"
+    ws["E16"].font = font_value
+    ws["E16"].border = underline_border
+    ws.row_dimensions[16].height = 22
+
+    ws.row_dimensions[17].height = 6
+
+    make_sec_hdr(18, "4. MOTIVATION & CAREER OBJECTIVES")
+
+    ws["A19"] = "Primary Motivation:"
+    ws["A19"].font = font_label
+    ws.merge_cells("B19:G19")
+    ws["B19"] = "[ ] Unlimited Income Potential   [ ] Flexible Time   [ ] Work from Home   [ ] Helping Others"
+    ws["B19"].font = font_value
+    ws["B19"].border = underline_border
+    ws.row_dimensions[19].height = 22
+
+    ws["A20"] = "Career Mode:"
+    ws["A20"].font = font_label
+    ws.merge_cells("B20:G20")
+    ws["B20"] = "[ ] Full-Time Financial Advisor     [ ] Part-Time Financial Advisor     [ ] Exploring / Open-Minded"
+    ws["B20"].font = font_value
+    ws["B20"].border = underline_border
+    ws.row_dimensions[20].height = 22
+
+    ws.row_dimensions[21].height = 6
+
+    make_sec_hdr(22, "5. CONFIRMATION & OFFICE USE ONLY")
+
+    ws["A23"] = "Candidate Signature:"
+    ws["A23"].font = font_label
+    ws.merge_cells("B23:C23")
+    ws["B23"] = "____________________________"
+    ws["B23"].font = font_value
+
+    ws["D23"] = "Date Signed:"
+    ws["D23"].font = font_label
+    ws.merge_cells("E23:G23")
+    ws["E23"] = "____________________________"
+    ws["E23"].font = font_value
+    ws.row_dimensions[23].height = 24
+
+    office_fill = PatternFill(start_color=BOX_BG, end_color=BOX_BG, fill_type="solid")
+    for r in range(24, 28):
+        ws.row_dimensions[r].height = 20
+        for c in range(1, 8):
+            cell = ws.cell(row=r, column=c)
+            cell.fill = office_fill
+            cell.border = border_box
+
+    ws.merge_cells("A24:G24")
+    ws["A24"] = "--- FOR AGENCY / UNIT MANAGER USE ONLY ---"
+    ws["A24"].font = font_box_title
+    ws["A24"].alignment = Alignment(horizontal="center", vertical="center")
+
+    ws["A25"] = "Assigned Recruit ID:"
+    ws["A25"].font = font_label
+    ws.merge_cells("B25:C25")
+    ws["B25"] = "REC-_____"
+    ws["B25"].font = font_value
+
+    ws["D25"] = "ADD Attendance:"
+    ws["D25"].font = font_label
+    ws.merge_cells("E25:G25")
+    ws["E25"] = "[ ] Attended (Date: ________)   [ ] Rescheduled"
+    ws["E25"].font = font_value
+
+    ws["A26"] = "LMS Endorsement:"
+    ws["A26"].font = font_label
+    ws.merge_cells("B26:C26")
+    ws["B26"] = "[ ] Approved for LMS Modules"
+    ws["B26"].font = font_value
+
+    ws["D26"] = "LMS Setup Date:"
+    ws["D26"].font = font_label
+    ws.merge_cells("E26:G26")
+    ws["E26"] = "Credentials Sent Date: ________"
+    ws["E26"].font = font_value
+
+    ws["A27"] = "UM / Recruiter Sign:"
+    ws["A27"].font = font_label
+    ws.merge_cells("B27:C27")
+    ws["B27"] = "_______________________"
+    ws["B27"].font = font_value
+
+    ws["D27"] = "Overall Status:"
+    ws["D27"].font = font_label
+    ws.merge_cells("E27:G27")
+    ws["E27"] = "[ ] Active In Pipeline   [ ] Ready for Exam"
+    ws["E27"].font = font_value
+
+    ws.column_dimensions["A"].width = 20
+    ws.column_dimensions["B"].width = 16
+    ws.column_dimensions["C"].width = 16
+    ws.column_dimensions["D"].width = 18
+    ws.column_dimensions["E"].width = 14
+    ws.column_dimensions["F"].width = 14
+    ws.column_dimensions["G"].width = 14
+
+
 def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
     wb = openpyxl.Workbook()
     wb.remove(wb.active) # Remove initial default sheet
@@ -972,9 +1234,13 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
     ws4.column_dimensions["F"].width = 20
     ws4.column_dimensions["G"].width = 20
 
+    # Add 5th sheet: ADD Registration Form
+    add_registration_form_tab(wb)
+
     # Save workbook
     wb.save(filename)
     print(f"Workbook successfully saved to: {filename}")
 
 if __name__ == "__main__":
     create_recruit_workbook()
+
