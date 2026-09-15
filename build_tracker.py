@@ -161,7 +161,7 @@ def add_registration_form_tab(wb):
     ws["A16"] = "Preferred ADD Session:"
     ws["A16"].font = font_label
     ws.merge_cells("B16:C16")
-    ws["B16"] = "[X] Thursday, Sept 17, 2026 (Next ADD)   [ ] Special / Alternate Date"
+    ws["B16"] = "[X] Thursday, Sept 17, 2026 (7:00 PM)   [ ] Special / Alternate Date"
     ws["B16"].font = font_value
     ws["B16"].border = underline_border
 

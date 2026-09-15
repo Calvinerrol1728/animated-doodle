@@ -122,7 +122,8 @@ def register_recruit_to_excel(data):
     ws1[f"Q{next_row}"] = next_action
     ws1[f"R{next_row}"] = add_date if attended_status == "Pending" else today + datetime.timedelta(days=1)
     notes_part = f" Note: {questions}." if questions else ""
-    ws1[f"S{next_row}"] = f"Online registration for ADD on {add_date}. Thank-you email sent from cedric.axa1@gmail.com.{notes_part}"
+    time_str = " (Thursday 7:00 PM)" if str(add_date) == "2026-09-17" else " (7:00 PM)"
+    ws1[f"S{next_row}"] = f"Online registration for ADD on {add_date}{time_str}. Thank-you email sent from cedric.axa1@gmail.com.{notes_part}"
 
     # Formats
     for col_l in ["F", "G", "I", "K", "M", "R"]:

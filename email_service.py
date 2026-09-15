@@ -15,6 +15,17 @@ SENDER_NAME = "Cedric"
 def generate_email_content(candidate_name, candidate_email, recruit_id, add_date):
     subject = f"Thank You for Registering for Agency Discovery Day (ADD)! | Cedric"
 
+    if "2026-09-17" in str(add_date):
+        display_session_date = "Thursday, September 17, 2026 at 7:00 PM"
+    elif "2026-09-24" in str(add_date):
+        display_session_date = "Thursday, September 24, 2026 at 7:00 PM"
+    elif "2026-10-01" in str(add_date):
+        display_session_date = "Thursday, October 01, 2026 at 7:00 PM"
+    elif "2026-09-14" in str(add_date):
+        display_session_date = "Monday, September 14, 2026"
+    else:
+        display_session_date = f"{add_date} at 7:00 PM"
+
     text_body = f"""Dear {candidate_name},
 
 Thank you for registering for our upcoming Agency Discovery Day (ADD)! I am delighted to welcome you to our career preview orientation.
@@ -22,7 +33,7 @@ Thank you for registering for our upcoming Agency Discovery Day (ADD)! I am deli
 Your registration has been successfully confirmed and recorded in our recruit monitoring tracker:
 • Candidate Name: {candidate_name}
 • Candidate ID: {recruit_id}
-• Scheduled ADD Session: {add_date}
+• Scheduled ADD Session: {display_session_date}
 • Host / Recruiter: {SENDER_NAME} ({SENDER_EMAIL})
 
 WHAT YOU WILL DISCOVER DURING THE AGENCY DISCOVERY DAY (ADD):
@@ -33,7 +44,7 @@ WHAT YOU WILL DISCOVER DURING THE AGENCY DISCOVERY DAY (ADD):
 WHAT HAPPENS NEXT:
 I will send you the Zoom orientation link and session preparation details before our meeting. If you have any questions or schedule adjustments in the meantime, please feel free to reply directly to this email at {SENDER_EMAIL}.
 
-I look forward to meeting you at our ADD session!
+I look forward to meeting you at our ADD session on {display_session_date}!
 
 Warm regards,
 
@@ -77,7 +88,7 @@ Email: {SENDER_EMAIL}
       
       <div class="box">
         <p><strong>Candidate ID:</strong> {recruit_id} <span class="badge">Confirmed</span></p>
-        <p><strong>Scheduled ADD Date:</strong> {add_date}</p>
+        <p><strong>Scheduled ADD Date & Time:</strong> {display_session_date}</p>
         <p><strong>Host / Coordinator:</strong> {SENDER_NAME} (&lt;<a href="mailto:{SENDER_EMAIL}" style="color:#2563eb;">{SENDER_EMAIL}</a>&gt;)</p>
         <p><strong>Status:</strong> Successfully logged in Recruit Monitoring Tracker</p>
       </div>
