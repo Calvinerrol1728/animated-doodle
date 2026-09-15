@@ -37,6 +37,8 @@
       position: sticky;
       top: 0;
       z-index: 50;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     .header-brand { display: flex; align-items: center; gap: 0.85rem; }
     .header-logo {
@@ -49,10 +51,9 @@
     }
     .header-title h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
     .header-title p { font-size: 0.8rem; color: #94A3B8; font-weight: 400; }
-    .header-actions { display: flex; align-items: center; gap: 0.75rem; }
-    .btn-download {
-      background: #10B981;
-      color: white;
+    .header-actions { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    
+    .btn-action {
       padding: 0.6rem 1.15rem;
       border-radius: 8px;
       font-size: 0.85rem;
@@ -62,14 +63,56 @@
       align-items: center;
       gap: 0.5rem;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
       border: none;
       cursor: pointer;
+    }
+    .btn-form {
+      background: #2563EB;
+      color: white;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+    }
+    .btn-form:hover { background: #1D4ED8; transform: translateY(-1px); }
+    .btn-download {
+      background: #10B981;
+      color: white;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
     }
     .btn-download:hover { background: #059669; transform: translateY(-1px); }
     
     /* Layout Container */
     .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem 2rem; }
+
+    /* Share Banner */
+    .share-banner {
+      background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+      border: 1.5px solid #BFDBFE;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .share-info h4 { font-size: 0.95rem; font-weight: 700; color: #1E40AF; margin-bottom: 0.2rem; }
+    .share-info p { font-size: 0.82rem; color: #3B82F6; }
+    .share-actions { display: flex; align-items: center; gap: 0.75rem; }
+    .btn-copy {
+      background: white;
+      color: #1E40AF;
+      border: 1px solid #93C5FD;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s;
+    }
+    .btn-copy:hover { background: #F8FAFC; border-color: #60A5FA; }
 
     /* KPI Grid */
     .kpi-grid {
@@ -115,6 +158,7 @@
       border-bottom: 2px solid var(--border);
       margin-bottom: 1.5rem;
       gap: 1.5rem;
+      overflow-x: auto;
     }
     .tab-btn {
       background: none;
@@ -126,6 +170,7 @@
       cursor: pointer;
       position: relative;
       transition: color 0.2s;
+      white-space: nowrap;
     }
     .tab-btn.active { color: var(--primary-light); }
     .tab-btn.active::after {
@@ -217,7 +262,7 @@
     }
     .badge-yes { background: #DCFCE7; color: #15803D; }
     .badge-no { background: #FEE2E2; color: #B91C1C; }
-    .badge-amber { background: #FEF3C7; color: #B45309; }
+    .badge-amber { background: #FEF3CD; color: #B45309; }
     .badge-blue { background: #DBEAFE; color: #1E40AF; }
     .badge-slate { background: #F1F5F9; color: #64748B; }
     
@@ -229,6 +274,25 @@
     }
     .progress-bar-fill { height: 100%; background: #10B981; border-radius: 3px; }
     .progress-bar-fill.amber { background: #F59E0B; }
+
+    /* Register View */
+    .register-view { display: none; }
+    .register-box {
+      background: white; border-radius: 12px; border: 1px solid var(--border);
+      padding: 2rem; max-width: 650px; margin: 0 auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .register-box h3 { font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; }
+    .register-box p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1.15rem; }
+    label { display: block; font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; }
+    .form-control {
+      width: 100%; padding: 0.65rem 0.85rem; border: 1.5px solid var(--border);
+      border-radius: 8px; font-size: 0.9rem; font-family: inherit; outline: none;
+    }
+    .form-control:focus { border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media(max-width: 550px) { .form-row { grid-template-columns: 1fr; gap: 0; } }
 
     /* Funnel View */
     .funnel-view { display: none; }
@@ -275,7 +339,13 @@
       </div>
     </div>
     <div class="header-actions">
-      <a href="/Recruit_Monitoring_Tracker.xlsx" download class="btn-download">
+      <a href="/register" target="_blank" class="btn-action btn-form">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        </svg>
+        Open ADD Registration Form
+      </a>
+      <a href="/Recruit_Monitoring_Tracker.xlsx" download class="btn-action btn-download">
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
         </svg>
@@ -285,38 +355,57 @@
   </header>
 
   <div class="container">
+
+    <!-- Shareable Link Banner -->
+    <div class="share-banner">
+      <div class="share-info">
+        <h4>📋 Recruit Self-Registration Link Ready!</h4>
+        <p>Share this link with recruits via WhatsApp or Messenger. When they submit, they are automatically added to the Excel sheet.</p>
+      </div>
+      <div class="share-actions">
+        <button class="btn-copy" onclick="copyRegisterLink()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+          <span id="copyBtnText">Copy Shareable Link</span>
+        </button>
+        <button class="btn-copy" onclick="switchTab('register')">Register Candidate Here</button>
+      </div>
+    </div>
+
     <!-- Top KPI Cards -->
     <div class="kpi-grid">
       <div class="kpi-card blue">
         <div class="kpi-label">Total Recruits Tracked</div>
-        <div class="kpi-value" id="kpi-total">1</div>
-        <div class="kpi-sub" id="kpi-total-sub">Active pipeline candidate</div>
+        <div class="kpi-value" id="kpi-total">6</div>
+        <div class="kpi-sub">Active pipeline candidates</div>
       </div>
       <div class="kpi-card cyan">
         <div class="kpi-label">Attended ADD</div>
-        <div class="kpi-value" id="kpi-add">1</div>
+        <div class="kpi-value" id="kpi-add">6</div>
         <div class="kpi-sub" id="kpi-add-sub">100.0% Attendance Rate</div>
       </div>
       <div class="kpi-card amber">
         <div class="kpi-label">LMS In Progress</div>
-        <div class="kpi-value" id="kpi-lms-prog">0</div>
-        <div class="kpi-sub">Currently completing modules</div>
+        <div class="kpi-value" id="kpi-lms-prog">1</div>
+        <div class="kpi-sub">Maybe Grandes (processing)</div>
       </div>
       <div class="kpi-card green">
-        <div class="kpi-label">Completed LMS</div>
-        <div class="kpi-value" id="kpi-lms-comp">0</div>
-        <div class="kpi-sub" id="kpi-lms-sub">0.0% of ADD attendees</div>
+        <div class="kpi-label">Awaiting LMS Action</div>
+        <div class="kpi-value" id="kpi-awaiting">5</div>
+        <div class="kpi-sub">Follow up on LMS decision</div>
       </div>
       <div class="kpi-card purple">
-        <div class="kpi-label">Funnel Conversion</div>
-        <div class="kpi-value" id="kpi-conv">0.0%</div>
-        <div class="kpi-sub">Ready for Licensing Exam</div>
+        <div class="kpi-label">Completed LMS</div>
+        <div class="kpi-value" id="kpi-lms-comp">0</div>
+        <div class="kpi-sub">Awaiting certifications</div>
       </div>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="tabs-nav">
       <button class="tab-btn active" onclick="switchTab('tracker')">Candidate Monitoring Tracker</button>
+      <button class="tab-btn" onclick="switchTab('register')">📝 ADD Registration Form (Auto-Add)</button>
       <button class="tab-btn" onclick="switchTab('funnel')">Pipeline Funnel & Analytics</button>
       <button class="tab-btn" onclick="switchTab('guide')">User Guide & Column Definitions</button>
     </div>
@@ -327,9 +416,9 @@
       <div class="toolbar">
         <div class="pills-group" id="pillsGroup">
           <button class="pill active" onclick="filterTable('all', this)">All Candidates</button>
-          <button class="pill" onclick="filterTable('add-yes', this)">Attended ADD</button>
-          <button class="pill" onclick="filterTable('awaiting-lms', this)">Awaiting LMS Setup</button>
-          <button class="pill" onclick="filterTable('lms-comp', this)">Completed LMS</button>
+          <button class="pill" onclick="filterTable('add-yes', this)">Attended ADD (6)</button>
+          <button class="pill" onclick="filterTable('lms-prog', this)">LMS In Progress (1)</button>
+          <button class="pill" onclick="filterTable('awaiting-lms', this)">Awaiting LMS Decision (5)</button>
         </div>
         <div class="search-group">
           <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search candidate name, recruiter, email..." oninput="handleSearch()">
@@ -361,22 +450,89 @@
       </div>
     </div>
 
-    <!-- VIEW 2: Funnel & Analytics -->
+    <!-- VIEW 2: Embedded Register Form -->
+    <div id="view-register" class="register-view">
+      <div class="register-box">
+        <h3>Register New Recruit for ADD</h3>
+        <p>Fill out this form to automatically add a new candidate directly into your Excel tracking sheet.</p>
+        
+        <form id="dashRegisterForm" onsubmit="handleDashRegister(event)">
+          <div class="form-group">
+            <label>Complete Name *</label>
+            <input type="text" id="d-name" class="form-control" placeholder="e.g. Juan Dela Cruz" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Contact Number *</label>
+              <input type="tel" id="d-phone" class="form-control" placeholder="e.g. 0917 123 4567" required>
+            </div>
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" id="d-email" class="form-control" placeholder="e.g. name@email.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Recruiter / Invited By *</label>
+            <input type="text" id="d-recruiter" class="form-control" placeholder="e.g. Calvin / Team Leader" required>
+          </div>
+          <div class="form-group">
+            <label>Preferred ADD Session Date *</label>
+            <select id="d-date" class="form-control" required>
+              <option value="2026-09-19">Saturday, Sept 19, 2026 — Upcoming Batch</option>
+              <option value="2026-09-26">Saturday, Sept 26, 2026 — Next Batch</option>
+              <option value="2026-10-03">Saturday, Oct 03, 2026 — October Batch</option>
+              <option value="2026-09-14">Special Session: Attended Sept 14, 2026</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Current Occupation / Field</label>
+              <select id="d-occ" class="form-control">
+                <option value="Employed Full-time">Employed Full-time</option>
+                <option value="Employed Part-time">Employed Part-time</option>
+                <option value="Business Owner / Entrepreneur">Business Owner / Entrepreneur</option>
+                <option value="Freelancer / Virtual Assistant">Freelancer / Virtual Assistant</option>
+                <option value="Fresh Graduate / Job Seeker">Fresh Graduate / Job Seeker</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Primary Interest</label>
+              <select id="d-interest" class="form-control">
+                <option value="Unlimited Income Potential">Unlimited Income Potential</option>
+                <option value="Flexible Schedule / Time Freedom">Flexible Schedule / Time Freedom</option>
+                <option value="Work from Home / Hybrid">Work from Home / Hybrid</option>
+                <option value="Career Growth & Leadership">Career Growth & Leadership</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Notes (Optional)</label>
+            <input type="text" id="d-notes" class="form-control" placeholder="Special remarks or background">
+          </div>
+          <button type="submit" id="dashSubmitBtn" class="btn-action btn-form" style="width: 100%; justify-content: center; font-size: 0.95rem; padding: 0.75rem;">
+            Add Candidate Directly to Excel Sheet
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- VIEW 3: Funnel & Analytics -->
     <div id="view-funnel" class="funnel-view">
       <div class="funnel-grid">
         <div class="card-box">
           <h3>Recruitment Milestone Funnel</h3>
           <div class="funnel-step">
             <span class="funnel-step-name">1. Recruits Sourced</span>
-            <span class="funnel-step-stat" id="f-sourced">1 <span style="font-size: 0.8rem; color: #64748B;">(100%)</span></span>
+            <span class="funnel-step-stat" id="f-sourced">6 <span style="font-size: 0.8rem; color: #64748B;">(100%)</span></span>
           </div>
           <div class="funnel-step">
             <span class="funnel-step-name">2. Attended ADD (Discovery Day)</span>
-            <span class="funnel-step-stat" id="f-add">1 <span style="font-size: 0.8rem; color: #0284C7;">(100.0%)</span></span>
+            <span class="funnel-step-stat" id="f-add">6 <span style="font-size: 0.8rem; color: #0284C7;">(100.0%)</span></span>
           </div>
           <div class="funnel-step">
-            <span class="funnel-step-name">3. Started LMS Modules</span>
-            <span class="funnel-step-stat" id="f-started">0 <span style="font-size: 0.8rem; color: #D97706;">(0.0%)</span></span>
+            <span class="funnel-step-name">3. Processing LMS Modules</span>
+            <span class="funnel-step-stat" id="f-started">1 <span style="font-size: 0.8rem; color: #D97706;">(16.7%)</span></span>
           </div>
           <div class="funnel-step">
             <span class="funnel-step-name">4. Completed LMS Modules</span>
@@ -389,40 +545,39 @@
         </div>
 
         <div class="card-box">
-          <h3>Candidate Status Overview</h3>
+          <h3>Current Active Batch Status</h3>
           <div style="font-size: 0.88rem; color: #475569; line-height: 1.7;">
-            <p><strong>Candidate Encoded:</strong> Maybe Grandes</p>
-            <p><strong>ADD Attendance Date:</strong> Sept 14, 2026 (Attended ADD: <strong>Yes</strong>)</p>
-            <p><strong>LMS Status:</strong> Setting up LMS account today (Sept 15, 2026)</p>
-            <p><strong>Pipeline Stage:</strong> <span class="badge badge-blue">ADD Attended - Awaiting LMS</span></p>
-            <p><strong>Next Step:</strong> Set up LMS credentials & send login access link today</p>
+            <p><strong>ADD Batch Date:</strong> September 14, 2026</p>
+            <p><strong>Total Attendees:</strong> 6 Candidates (100% Attendance)</p>
+            <p><strong>Processing LMS Today:</strong> Maybe Grandes (<span class="badge badge-amber">LMS In Progress</span>)</p>
+            <p><strong>Follow-Up Needed:</strong> Michael, Alona, Lorenz, Princess, Jezreel Kate (<span class="badge badge-blue">Awaiting LMS</span>)</p>
             <p style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #E2E8F0; font-size: 0.82rem; color: #64748B;">
-              Rows 10 through 65 in your Excel file are pre-formatted blank rows ready for you to add more candidates anytime.
+              When any recruit confirms they are ready for LMS, select <strong>In Progress</strong> in Column L of the Excel sheet.
             </p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- VIEW 3: Guide -->
+    <!-- VIEW 4: Guide -->
     <div id="view-guide" class="guide-view">
       <div class="guide-card">
-        <h3>How to Use Your Recruit Monitoring Excel Workbook</h3>
+        <h3>How to Use Your Recruit Monitoring Excel Workbook & Registration Form</h3>
         <div class="guide-step">
-          <div class="guide-step-title">Step 1: Input Complete Name (Col B)</div>
-          <div class="guide-step-desc">Enter the recruit's full name in Column B. The Recruit ID (Col A) and automated pipeline status formulas will activate automatically!</div>
+          <div class="guide-step-title">1. Shareable ADD Registration Form</div>
+          <div class="guide-step-desc">Share the link <code>/register</code> with recruits. When they fill out the form, their information (Name, Contact, Recruiter, ADD Date) is automatically appended as a new row in your Excel sheet with a new Recruit ID (e.g., REC-007) and set to <strong>Pending</strong> attendance.</div>
         </div>
         <div class="guide-step">
-          <div class="guide-step-title">Step 2: Track ADD Attendance (Col H)</div>
-          <div class="guide-step-desc">ADD stands for Agency Discovery Day / Agent Development Day. Choose from the dropdown: <strong>Yes</strong> (attended), <strong>No</strong> (missed), <strong>Rescheduled</strong>, or <strong>Pending</strong>.</div>
+          <div class="guide-step-title">2. Tracking ADD Attendance (Col H)</div>
+          <div class="guide-step-desc">Once the session concludes, update <strong>Attended ADD?</strong> in Column H to <strong>Yes</strong> (attended), <strong>No</strong> (missed), or <strong>Rescheduled</strong>.</div>
         </div>
         <div class="guide-step">
-          <div class="guide-step-title">Step 3: Track LMS Completion (Col L)</div>
-          <div class="guide-step-desc">LMS stands for Learning Management System (pre-licensing module portal). Choose: <strong>Yes</strong> (completed/certified), <strong>In Progress</strong> (currently studying), or <strong>Not Started</strong>.</div>
+          <div class="guide-step-title">3. Tracking LMS Completion (Col L)</div>
+          <div class="guide-step-desc">When a recruit agrees to start online training, change Column L from <strong>Not Started</strong> to <strong>In Progress</strong>. When they finish and pass, change to <strong>Yes</strong>.</div>
         </div>
         <div class="guide-step">
-          <div class="guide-step-title">Step 4: Execute Next Action & Target Follow-up (Cols Q & R)</div>
-          <div class="guide-step-desc">Follow the automated Pipeline Stage (Col P) to immediately know what action is required: schedule exam, follow up on pending modules, or re-invite to ADD.</div>
+          <div class="guide-step-title">4. Automatic Pipeline Stage (Col P)</div>
+          <div class="guide-step-desc">The stage tag in Column P automatically updates: <em>ADD Scheduled</em> ➔ <em>ADD Attended - Awaiting LMS</em> ➔ <em>LMS In Progress</em> ➔ <em>LMS Completed (Ready for Exam)</em>.</div>
         </div>
       </div>
     </div>
@@ -448,17 +603,16 @@
       const total = data.length;
       const attended = data.filter(r => r.attended_add === 'Yes').length;
       const lmsProg = data.filter(r => r.completed_lms === 'In Progress').length;
+      const awaiting = data.filter(r => r.attended_add === 'Yes' && r.completed_lms === 'Not Started').length;
       const lmsComp = data.filter(r => r.completed_lms === 'Yes').length;
 
       document.getElementById('kpi-total').textContent = total;
       document.getElementById('kpi-add').textContent = attended;
       document.getElementById('kpi-add-sub').textContent = total > 0 ? ((attended / total) * 100).toFixed(1) + '% Attendance Rate' : '0.0%';
       document.getElementById('kpi-lms-prog').textContent = lmsProg;
+      document.getElementById('kpi-awaiting').textContent = awaiting;
       document.getElementById('kpi-lms-comp').textContent = lmsComp;
-      document.getElementById('kpi-lms-sub').textContent = attended > 0 ? ((lmsComp / attended) * 100).toFixed(1) + '% of ADD attendees' : '0.0%';
-      document.getElementById('kpi-conv').textContent = total > 0 ? ((lmsComp / total) * 100).toFixed(1) + '%' : '0.0%';
 
-      // Funnel view
       if (document.getElementById('f-sourced')) {
         document.getElementById('f-sourced').innerHTML = `${total} <span style="font-size: 0.8rem; color: #64748B;">(100%)</span>`;
         document.getElementById('f-add').innerHTML = `${attended} <span style="font-size: 0.8rem; color: #0284C7;">(${total > 0 ? ((attended/total)*100).toFixed(1) : 0}%)</span>`;
@@ -496,6 +650,7 @@
         if (r.stage.includes('Completed')) stageBadge = `<span class="badge badge-yes">${r.stage}</span>`;
         else if (r.stage.includes('Progress')) stageBadge = `<span class="badge badge-amber">${r.stage}</span>`;
         else if (r.stage.includes('ADD Attended') || r.stage.includes('Awaiting LMS')) stageBadge = `<span class="badge badge-blue">${r.stage}</span>`;
+        else if (r.stage.includes('Scheduled')) stageBadge = `<span class="badge badge-blue">${r.stage}</span>`;
         else if (r.stage.includes('Missed')) stageBadge = `<span class="badge badge-no">${r.stage}</span>`;
 
         const tr = document.createElement('tr');
@@ -552,8 +707,8 @@
 
         if (currentFilter === 'all') return true;
         if (currentFilter === 'add-yes') return r.attended_add === 'Yes';
+        if (currentFilter === 'lms-prog') return r.completed_lms === 'In Progress';
         if (currentFilter === 'awaiting-lms') return r.attended_add === 'Yes' && r.completed_lms === 'Not Started';
-        if (currentFilter === 'lms-comp') return r.completed_lms === 'Yes';
         return true;
       });
 
@@ -562,11 +717,64 @@
 
     function switchTab(tab) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes(tab.toLowerCase()));
+      if (activeBtn) activeBtn.classList.add('active');
 
       document.getElementById('view-tracker').style.display = tab === 'tracker' ? 'block' : 'none';
+      document.getElementById('view-register').style.display = tab === 'register' ? 'block' : 'none';
       document.getElementById('view-funnel').style.display = tab === 'funnel' ? 'block' : 'none';
       document.getElementById('view-guide').style.display = tab === 'guide' ? 'block' : 'none';
+    }
+
+    function copyRegisterLink() {
+      const link = window.location.origin + '/register';
+      navigator.clipboard.writeText(link).then(() => {
+        const btnText = document.getElementById('copyBtnText');
+        btnText.textContent = "Link Copied!";
+        setTimeout(() => { btnText.textContent = "Copy Shareable Link"; }, 2000);
+      }).catch(err => {
+        alert("Copy link: " + link);
+      });
+    }
+
+    async function handleDashRegister(e) {
+      e.preventDefault();
+      const btn = document.getElementById('dashSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = "Saving to Excel Sheet...";
+
+      const payload = {
+        name: document.getElementById('d-name').value.trim(),
+        phone: document.getElementById('d-phone').value.trim(),
+        email: document.getElementById('d-email').value.trim(),
+        recruiter: document.getElementById('d-recruiter').value.trim(),
+        add_date: document.getElementById('d-date').value,
+        occupation: document.getElementById('d-occ').value,
+        interest: document.getElementById('d-interest').value,
+        questions: document.getElementById('d-notes').value.trim()
+      };
+
+      try {
+        const res = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.success) {
+          alert(`Success! ${payload.name} has been added to your Excel sheet with ID: ${result.recruit_id}`);
+          document.getElementById('dashRegisterForm').reset();
+          await loadData();
+          switchTab('tracker');
+        } else {
+          alert("Error: " + result.error);
+        }
+      } catch (err) {
+        alert("Network error: " + err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Add Candidate Directly to Excel Sheet";
+      }
     }
 
     window.onload = loadData;
