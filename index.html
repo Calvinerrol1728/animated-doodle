@@ -289,27 +289,27 @@
     <div class="kpi-grid">
       <div class="kpi-card blue">
         <div class="kpi-label">Total Recruits Tracked</div>
-        <div class="kpi-value" id="kpi-total">15</div>
-        <div class="kpi-sub">Active pipeline candidates</div>
+        <div class="kpi-value" id="kpi-total">1</div>
+        <div class="kpi-sub" id="kpi-total-sub">Active pipeline candidate</div>
       </div>
       <div class="kpi-card cyan">
         <div class="kpi-label">Attended ADD</div>
-        <div class="kpi-value" id="kpi-add">10</div>
-        <div class="kpi-sub">66.7% Attendance Rate</div>
+        <div class="kpi-value" id="kpi-add">1</div>
+        <div class="kpi-sub" id="kpi-add-sub">100.0% Attendance Rate</div>
       </div>
       <div class="kpi-card amber">
         <div class="kpi-label">LMS In Progress</div>
-        <div class="kpi-value" id="kpi-lms-prog">4</div>
+        <div class="kpi-value" id="kpi-lms-prog">0</div>
         <div class="kpi-sub">Currently completing modules</div>
       </div>
       <div class="kpi-card green">
         <div class="kpi-label">Completed LMS</div>
-        <div class="kpi-value" id="kpi-lms-comp">4</div>
-        <div class="kpi-sub">40.0% of ADD attendees</div>
+        <div class="kpi-value" id="kpi-lms-comp">0</div>
+        <div class="kpi-sub" id="kpi-lms-sub">0.0% of ADD attendees</div>
       </div>
       <div class="kpi-card purple">
         <div class="kpi-label">Funnel Conversion</div>
-        <div class="kpi-value">26.7%</div>
+        <div class="kpi-value" id="kpi-conv">0.0%</div>
         <div class="kpi-sub">Ready for Licensing Exam</div>
       </div>
     </div>
@@ -325,13 +325,11 @@
     <div id="view-tracker">
       <!-- Toolbar -->
       <div class="toolbar">
-        <div class="pills-group">
-          <button class="pill active" onclick="filterTable('all', this)">All (15)</button>
-          <button class="pill" onclick="filterTable('add-yes', this)">Attended ADD (10)</button>
-          <button class="pill" onclick="filterTable('lms-comp', this)">Completed LMS (4)</button>
-          <button class="pill" onclick="filterTable('lms-prog', this)">LMS In Progress (4)</button>
-          <button class="pill" onclick="filterTable('add-pending', this)">ADD Pending (2)</button>
-          <button class="pill" onclick="filterTable('action-needed', this)">Action Needed (5)</button>
+        <div class="pills-group" id="pillsGroup">
+          <button class="pill active" onclick="filterTable('all', this)">All Candidates</button>
+          <button class="pill" onclick="filterTable('add-yes', this)">Attended ADD</button>
+          <button class="pill" onclick="filterTable('awaiting-lms', this)">Awaiting LMS Setup</button>
+          <button class="pill" onclick="filterTable('lms-comp', this)">Completed LMS</button>
         </div>
         <div class="search-group">
           <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search candidate name, recruiter, email..." oninput="handleSearch()">
@@ -370,70 +368,37 @@
           <h3>Recruitment Milestone Funnel</h3>
           <div class="funnel-step">
             <span class="funnel-step-name">1. Recruits Sourced</span>
-            <span class="funnel-step-stat">15 <span style="font-size: 0.8rem; color: #64748B;">(100%)</span></span>
+            <span class="funnel-step-stat" id="f-sourced">1 <span style="font-size: 0.8rem; color: #64748B;">(100%)</span></span>
           </div>
           <div class="funnel-step">
             <span class="funnel-step-name">2. Attended ADD (Discovery Day)</span>
-            <span class="funnel-step-stat">10 <span style="font-size: 0.8rem; color: #0284C7;">(66.7%)</span></span>
+            <span class="funnel-step-stat" id="f-add">1 <span style="font-size: 0.8rem; color: #0284C7;">(100.0%)</span></span>
           </div>
           <div class="funnel-step">
             <span class="funnel-step-name">3. Started LMS Modules</span>
-            <span class="funnel-step-stat">8 <span style="font-size: 0.8rem; color: #D97706;">(53.3%)</span></span>
+            <span class="funnel-step-stat" id="f-started">0 <span style="font-size: 0.8rem; color: #D97706;">(0.0%)</span></span>
           </div>
           <div class="funnel-step">
             <span class="funnel-step-name">4. Completed LMS Modules</span>
-            <span class="funnel-step-stat">4 <span style="font-size: 0.8rem; color: #10B981;">(26.7%)</span></span>
+            <span class="funnel-step-stat" id="f-comp">0 <span style="font-size: 0.8rem; color: #10B981;">(0.0%)</span></span>
           </div>
           <div class="funnel-step">
             <span class="funnel-step-name">5. Ready for Licensing Exam</span>
-            <span class="funnel-step-stat">4 <span style="font-size: 0.8rem; color: #7C3AED;">(26.7%)</span></span>
+            <span class="funnel-step-stat" id="f-exam">0 <span style="font-size: 0.8rem; color: #7C3AED;">(0.0%)</span></span>
           </div>
         </div>
 
         <div class="card-box">
-          <h3>Recruiter & Team Performance</h3>
-          <div style="overflow-x: auto;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Recruiter Name</th>
-                  <th>Sourced</th>
-                  <th>ADD Yes</th>
-                  <th>LMS Comp</th>
-                  <th>Success %</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Sarah Jenkins (UM)</strong></td>
-                  <td>4</td>
-                  <td>4 (100%)</td>
-                  <td>3 (75%)</td>
-                  <td><span class="badge badge-yes">75.0%</span></td>
-                </tr>
-                <tr>
-                  <td><strong>David Tan</strong></td>
-                  <td>4</td>
-                  <td>4 (100%)</td>
-                  <td>1 (25%)</td>
-                  <td><span class="badge badge-amber">25.0%</span></td>
-                </tr>
-                <tr>
-                  <td><strong>Elena Gomez</strong></td>
-                  <td>4</td>
-                  <td>1 (25%)</td>
-                  <td>0 (0%)</td>
-                  <td><span class="badge badge-slate">0.0%</span></td>
-                </tr>
-                <tr>
-                  <td><strong>Michael Chang</strong></td>
-                  <td>3</td>
-                  <td>1 (33%)</td>
-                  <td>0 (0%)</td>
-                  <td><span class="badge badge-slate">0.0%</span></td>
-                </tr>
-              </tbody>
-            </table>
+          <h3>Candidate Status Overview</h3>
+          <div style="font-size: 0.88rem; color: #475569; line-height: 1.7;">
+            <p><strong>Candidate Encoded:</strong> Maybe Grandes</p>
+            <p><strong>ADD Attendance Date:</strong> Sept 14, 2026 (Attended ADD: <strong>Yes</strong>)</p>
+            <p><strong>LMS Status:</strong> Setting up LMS account today (Sept 15, 2026)</p>
+            <p><strong>Pipeline Stage:</strong> <span class="badge badge-blue">ADD Attended - Awaiting LMS</span></p>
+            <p><strong>Next Step:</strong> Set up LMS credentials & send login access link today</p>
+            <p style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #E2E8F0; font-size: 0.82rem; color: #64748B;">
+              Rows 10 through 65 in your Excel file are pre-formatted blank rows ready for you to add more candidates anytime.
+            </p>
           </div>
         </div>
       </div>
@@ -472,9 +437,34 @@
       try {
         const res = await fetch('/api/recruits');
         recruitsData = await res.json();
+        updateKPIs(recruitsData);
         renderTable(recruitsData);
       } catch (err) {
         console.error("Failed to fetch recruits data:", err);
+      }
+    }
+
+    function updateKPIs(data) {
+      const total = data.length;
+      const attended = data.filter(r => r.attended_add === 'Yes').length;
+      const lmsProg = data.filter(r => r.completed_lms === 'In Progress').length;
+      const lmsComp = data.filter(r => r.completed_lms === 'Yes').length;
+
+      document.getElementById('kpi-total').textContent = total;
+      document.getElementById('kpi-add').textContent = attended;
+      document.getElementById('kpi-add-sub').textContent = total > 0 ? ((attended / total) * 100).toFixed(1) + '% Attendance Rate' : '0.0%';
+      document.getElementById('kpi-lms-prog').textContent = lmsProg;
+      document.getElementById('kpi-lms-comp').textContent = lmsComp;
+      document.getElementById('kpi-lms-sub').textContent = attended > 0 ? ((lmsComp / attended) * 100).toFixed(1) + '% of ADD attendees' : '0.0%';
+      document.getElementById('kpi-conv').textContent = total > 0 ? ((lmsComp / total) * 100).toFixed(1) + '%' : '0.0%';
+
+      // Funnel view
+      if (document.getElementById('f-sourced')) {
+        document.getElementById('f-sourced').innerHTML = `${total} <span style="font-size: 0.8rem; color: #64748B;">(100%)</span>`;
+        document.getElementById('f-add').innerHTML = `${attended} <span style="font-size: 0.8rem; color: #0284C7;">(${total > 0 ? ((attended/total)*100).toFixed(1) : 0}%)</span>`;
+        document.getElementById('f-started').innerHTML = `${lmsProg + lmsComp} <span style="font-size: 0.8rem; color: #D97706;">(${total > 0 ? (((lmsProg+lmsComp)/total)*100).toFixed(1) : 0}%)</span>`;
+        document.getElementById('f-comp').innerHTML = `${lmsComp} <span style="font-size: 0.8rem; color: #10B981;">(${total > 0 ? ((lmsComp/total)*100).toFixed(1) : 0}%)</span>`;
+        document.getElementById('f-exam').innerHTML = `${lmsComp} <span style="font-size: 0.8rem; color: #7C3AED;">(${total > 0 ? ((lmsComp/total)*100).toFixed(1) : 0}%)</span>`;
       }
     }
 
@@ -505,7 +495,7 @@
         let stageBadge = `<span class="badge badge-slate">${r.stage}</span>`;
         if (r.stage.includes('Completed')) stageBadge = `<span class="badge badge-yes">${r.stage}</span>`;
         else if (r.stage.includes('Progress')) stageBadge = `<span class="badge badge-amber">${r.stage}</span>`;
-        else if (r.stage.includes('ADD Attended')) stageBadge = `<span class="badge badge-blue">${r.stage}</span>`;
+        else if (r.stage.includes('ADD Attended') || r.stage.includes('Awaiting LMS')) stageBadge = `<span class="badge badge-blue">${r.stage}</span>`;
         else if (r.stage.includes('Missed')) stageBadge = `<span class="badge badge-no">${r.stage}</span>`;
 
         const tr = document.createElement('tr');
@@ -513,7 +503,7 @@
           <td><strong>${r.id}</strong></td>
           <td>
             <div style="font-weight: 600; color: #0F172A;">${r.name}</div>
-            <div style="font-size: 0.75rem; color: #64748B;">${r.email}</div>
+            <div style="font-size: 0.75rem; color: #64748B;">${r.email !== '-' ? r.email : ''}</div>
           </td>
           <td><span style="font-size: 0.8rem; font-family: monospace;">${r.phone}</span></td>
           <td>${r.recruiter}</td>
@@ -529,7 +519,7 @@
             </div>
           </td>
           <td>${stageBadge}</td>
-          <td style="max-width: 260px; font-size: 0.8rem;">${r.next_action}</td>
+          <td style="max-width: 260px; font-size: 0.8rem; font-weight: 500;">${r.next_action}</td>
           <td><span style="font-size: 0.8rem; font-weight: 600; color: #2563EB;">${r.follow_up}</span></td>
         `;
         tbody.appendChild(tr);
@@ -550,7 +540,6 @@
     function applyFilters() {
       const q = document.getElementById('searchInput').value.toLowerCase().trim();
       let filtered = recruitsData.filter(r => {
-        // Match search query
         const matchQuery = !q || (
           r.name.toLowerCase().includes(q) ||
           r.email.toLowerCase().includes(q) ||
@@ -561,13 +550,10 @@
 
         if (!matchQuery) return false;
 
-        // Match pill filter
         if (currentFilter === 'all') return true;
         if (currentFilter === 'add-yes') return r.attended_add === 'Yes';
+        if (currentFilter === 'awaiting-lms') return r.attended_add === 'Yes' && r.completed_lms === 'Not Started';
         if (currentFilter === 'lms-comp') return r.completed_lms === 'Yes';
-        if (currentFilter === 'lms-prog') return r.completed_lms === 'In Progress';
-        if (currentFilter === 'add-pending') return r.attended_add === 'Pending';
-        if (currentFilter === 'action-needed') return r.attended_add === 'No' || r.completed_lms === 'In Progress' || r.completed_lms === 'Yes';
         return true;
       });
 

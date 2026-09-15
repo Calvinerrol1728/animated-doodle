@@ -155,147 +155,79 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
 
     ws1.row_dimensions[8].height = 30
 
-    # 15 Realistic Sample Recruits
-    sample_data = [
-        (
-            "REC-001", "Dela Cruz, Juan M.", "+63 917 123 4567", "juan.delacruz@gmail.com", "Sarah Jenkins (UM)",
-            datetime.date(2026, 8, 10), datetime.date(2026, 8, 15), "Yes", datetime.date(2026, 8, 15),
-            "Passed initial interview; keen on full-time advisory career",
-            datetime.date(2026, 8, 16), "Yes", datetime.date(2026, 8, 25), 1.0, "Cert #LMS-2026-881 (Passed 94%)",
-            "Endorse for Insurance Commission Licensing Exam", datetime.date(2026, 9, 18), "Submitted all government IDs and 2x2 photo"
-        ),
-        (
-            "REC-002", "Santos, Maria Clara", "+63 918 234 5678", "maria.santos@yahoo.com", "David Tan",
-            datetime.date(2026, 8, 12), datetime.date(2026, 8, 15), "Yes", datetime.date(2026, 8, 15),
-            "Very active in Q&A session; exploring part-time advisory",
-            datetime.date(2026, 8, 17), "Yes", datetime.date(2026, 8, 28), 1.0, "Cert #LMS-2026-894 (Passed 88%)",
-            "Review mock exam questions with recruit", datetime.date(2026, 9, 17), "Exam requirements filed; scheduling mock test"
-        ),
-        (
-            "REC-003", "Reyes, Mark Anthony", "+63 919 345 6789", "mark.reyes@outlook.com", "Sarah Jenkins (UM)",
-            datetime.date(2026, 8, 18), datetime.date(2026, 8, 22), "Yes", datetime.date(2026, 8, 22),
-            "Accountant background; strong financial planning interest",
-            datetime.date(2026, 8, 24), "In Progress", None, 0.75, "Completed 4 of 6 modules",
-            "Remind recruit to complete final 2 LMS modules", datetime.date(2026, 9, 16), "Followed up via WhatsApp; targeting completion this week"
-        ),
-        (
-            "REC-004", "Garcia, Patricia Mae", "+63 920 456 7890", "patricia.garcia@gmail.com", "Elena Gomez",
-            datetime.date(2026, 8, 20), datetime.date(2026, 8, 22), "Yes", datetime.date(2026, 8, 22),
-            "Corporate sales experience; enthusiastic candidate",
-            datetime.date(2026, 8, 25), "In Progress", None, 0.50, "Completed 3 of 6 modules",
-            "Follow up on Module 4 (Variable Unit-Linked)", datetime.date(2026, 9, 17), "Asked clarification about investment funds"
-        ),
-        (
-            "REC-005", "Aquino, Roberto Carlos", "+63 921 567 8901", "roberto.aquino@gmail.com", "David Tan",
-            datetime.date(2026, 8, 25), datetime.date(2026, 8, 29), "Yes", datetime.date(2026, 8, 29),
-            "Attended full ADD orientation; signed intention form",
-            datetime.date(2026, 9, 1), "Not Started", None, 0.0, "Account created, awaiting first login",
-            "Send LMS login credentials & quick-start guide", datetime.date(2026, 9, 16), "Resent activation link to recruit email"
-        ),
-        (
-            "REC-006", "Bautista, Sarah Jane", "+63 922 678 9012", "sarah.bautista@gmail.com", "Sarah Jenkins (UM)",
-            datetime.date(2026, 8, 26), datetime.date(2026, 8, 29), "Yes", datetime.date(2026, 8, 29),
-            "Former bank officer; high potential for rapid onboarding",
-            datetime.date(2026, 8, 30), "Yes", datetime.date(2026, 9, 8), 1.0, "Cert #LMS-2026-912 (Passed 96%)",
-            "Submit licensing application to agency coordinator", datetime.date(2026, 9, 18), "Top scorer in batch; ready for branch endorsement"
-        ),
-        (
-            "REC-007", "Mendoza, Christian Paul", "+63 923 789 0123", "cp.mendoza@gmail.com", "Michael Chang",
-            datetime.date(2026, 9, 2), datetime.date(2026, 9, 19), "Pending", None,
-            "Confirmed invitation receipt; interested in career preview",
-            None, "Not Started", None, 0.0, "Pending ADD completion",
-            "Send ADD webinar link & preparation checklist", datetime.date(2026, 9, 18), "Referred by Juan Dela Cruz; high enthusiasm"
-        ),
-        (
-            "REC-008", "Villanueva, Kristine Joy", "+63 924 890 1234", "kristine.v@yahoo.com", "Elena Gomez",
-            datetime.date(2026, 9, 1), datetime.date(2026, 9, 5), "Rescheduled", None,
-            "Family matter on Sept 5; requested transfer to Sept 19",
-            None, "Not Started", None, 0.0, "Pending ADD completion",
-            "Confirm attendance for Sept 19 ADD session", datetime.date(2026, 9, 17), "Sent updated calendar invite"
-        ),
-        (
-            "REC-009", "Tan, Michael Angelo", "+63 925 901 2345", "mike.tan@hotmail.com", "Michael Chang",
-            datetime.date(2026, 9, 3), datetime.date(2026, 9, 5), "No", None,
-            "No-show; phone was unattended during call time",
-            None, "Not Started", None, 0.0, "Pending ADD re-engagement",
-            "Call back and re-invite to next ADD session", datetime.date(2026, 9, 16), "Sent follow-up email with recording preview"
-        ),
-        (
-            "REC-010", "Ramos, Beatrice Nicole", "+63 926 012 3456", "beatrice.ramos@gmail.com", "David Tan",
-            datetime.date(2026, 8, 28), datetime.date(2026, 9, 5), "Yes", datetime.date(2026, 9, 5),
-            "Very interactive; asked about commission & team structure",
-            datetime.date(2026, 9, 7), "In Progress", None, 0.35, "Completed 2 of 6 modules",
-            "Check if needing technical assistance on portal", datetime.date(2026, 9, 17), "Reported video playback lag; advised to use Chrome"
-        ),
-        (
-            "REC-011", "Castro, Jonathan David", "+63 927 123 4568", "jdcastro@gmail.com", "Sarah Jenkins (UM)",
-            datetime.date(2026, 8, 22), datetime.date(2026, 8, 29), "Yes", datetime.date(2026, 8, 29),
-            "Strong communication skills; completed onboarding docs",
-            datetime.date(2026, 8, 31), "Yes", datetime.date(2026, 9, 9), 1.0, "Cert #LMS-2026-928 (Passed 91%)",
-            "Endorse for IC Exam and schedule branch orientation", datetime.date(2026, 9, 19), "Exam fee receipt confirmed"
-        ),
-        (
-            "REC-012", "Navarro, Angela Marie", "+63 928 234 5679", "angela.navarro@gmail.com", "Elena Gomez",
-            datetime.date(2026, 9, 8), datetime.date(2026, 9, 19), "Pending", None,
-            "Expressed interest in flexible part-time income",
-            None, "Not Started", None, 0.0, "Pending ADD completion",
-            "Follow up RSVP for upcoming ADD orientation", datetime.date(2026, 9, 18), "Messaged on LinkedIn; follow up tomorrow"
-        ),
-        (
-            "REC-013", "Lim, Gabriel Francis", "+63 929 345 6780", "gabriel.lim@gmail.com", "Michael Chang",
-            datetime.date(2026, 8, 30), datetime.date(2026, 9, 5), "Yes", datetime.date(2026, 9, 5),
-            "Attended ADD; completed career interest profiling",
-            datetime.date(2026, 9, 8), "Not Started", None, 0.0, "Credentials issued 09/08",
-            "Check why LMS has not been started after 1 week", datetime.date(2026, 9, 16), "Candidate busy with work deadline; starts Saturday"
-        ),
-        (
-            "REC-014", "Flores, Camille Sophia", "+63 930 456 7891", "camille.flores@gmail.com", "David Tan",
-            datetime.date(2026, 8, 29), datetime.date(2026, 9, 5), "Yes", datetime.date(2026, 9, 5),
-            "Educator transitioning to financial services industry",
-            datetime.date(2026, 9, 6), "In Progress", None, 0.85, "Completed 5 of 6 modules",
-            "Remind recruit to submit practice mock exam", datetime.date(2026, 9, 16), "Targeting final module completion tonight"
-        ),
-        (
-            "REC-015", "Diaz, Vincent Edward", "+63 931 567 8902", "vincent.diaz@gmail.com", "Elena Gomez",
-            datetime.date(2026, 9, 4), datetime.date(2026, 9, 12), "No", None,
-            "Unforeseen overtime work; could not attend ADD",
-            None, "Not Started", None, 0.0, "Pending ADD re-engagement",
-            "Offer weekend 1-on-1 career briefing or video", datetime.date(2026, 9, 17), "Prefers Saturday morning slot"
-        )
-    ]
+    # The ONLY encoded recruit requested: Maybe Grandes
+    # Attended ADD yesterday Sept 14, 2026 and will set up her LMS today (Sept 15, 2026)
+    encoded_recruit = (
+        "REC-001",
+        "Grandes, Maybe",                # Complete Name (Last Name, First Name)
+        "",                              # Contact Number (leave blank for user to add)
+        "",                              # Email Address (leave blank for user to add)
+        "",                              # Sourced By (leave blank for user to add)
+        datetime.date(2026, 9, 14),      # Date Sourced
+        datetime.date(2026, 9, 14),      # ADD Scheduled Date (yesterday Sept 14, 2026)
+        "Yes",                           # Attended ADD? -> Yes!
+        datetime.date(2026, 9, 14),      # ADD Attendance Date (yesterday Sept 14, 2026)
+        "Attended ADD on Sept 14; confirmed interest. Preparing for LMS setup.", # ADD Remarks
+        datetime.date(2026, 9, 15),      # LMS Access Date (Today Sept 15, 2026)
+        "Not Started",                   # Completed LMS? -> Not Started (setting up today)
+        None,                            # LMS Completion Date (not yet)
+        0.0,                             # LMS Progress % -> 0%
+        "Pending account activation",    # LMS Score / Certificate
+        # Pipeline Stage: automated formula
+        "Set up LMS account & send module access link today", # Next Action Required
+        datetime.date(2026, 9, 15),      # Target Follow-up Date (Today)
+        "Attended ADD yesterday Sept 14, 2026. Will set up her LMS today." # Recruiter Notes
+    )
 
-    # Populate rows 9 to 65 (15 sample rows + 42 blank template rows)
+    # Populate Row 9 (Maybe Grandes) and Rows 10 to 65 (Clean blank template rows)
     for r in range(9, 66):
-        is_sample = (r - 9) < len(sample_data)
         bg_hex = "FFFFFF" if r % 2 == 1 else "F8FAFC"
         row_fill = PatternFill(start_color=bg_hex, end_color=bg_hex, fill_type="solid")
         ws1.row_dimensions[r].height = 22
 
-        if is_sample:
-            data = sample_data[r - 9]
-            ws1[f"A{r}"] = data[0]
-            ws1[f"B{r}"] = data[1]
-            ws1[f"C{r}"] = data[2]
-            ws1[f"D{r}"] = data[3]
-            ws1[f"E{r}"] = data[4]
-            ws1[f"F{r}"] = data[5]
-            ws1[f"G{r}"] = data[6]
-            ws1[f"H{r}"] = data[7]
-            ws1[f"I{r}"] = data[8]
-            ws1[f"J{r}"] = data[9]
-            ws1[f"K{r}"] = data[10]
-            ws1[f"L{r}"] = data[11]
-            ws1[f"M{r}"] = data[12]
-            ws1[f"N{r}"] = data[13]
-            ws1[f"O{r}"] = data[14]
+        if r == 9:
+            # Encode Maybe Grandes
+            ws1[f"A{r}"] = encoded_recruit[0]
+            ws1[f"B{r}"] = encoded_recruit[1]
+            ws1[f"C{r}"] = encoded_recruit[2]
+            ws1[f"D{r}"] = encoded_recruit[3]
+            ws1[f"E{r}"] = encoded_recruit[4]
+            ws1[f"F{r}"] = encoded_recruit[5]
+            ws1[f"G{r}"] = encoded_recruit[6]
+            ws1[f"H{r}"] = encoded_recruit[7]
+            ws1[f"I{r}"] = encoded_recruit[8]
+            ws1[f"J{r}"] = encoded_recruit[9]
+            ws1[f"K{r}"] = encoded_recruit[10]
+            ws1[f"L{r}"] = encoded_recruit[11]
+            ws1[f"M{r}"] = encoded_recruit[12]
+            ws1[f"N{r}"] = encoded_recruit[13]
+            ws1[f"O{r}"] = encoded_recruit[14]
             ws1[f"P{r}"] = f'=IF(B{r}="","",IF(L{r}="Yes","LMS Completed (Ready for Exam)",IF(L{r}="In Progress","LMS In Progress",IF(H{r}="Yes","ADD Attended - Awaiting LMS",IF(H{r}="Rescheduled","ADD Rescheduled",IF(H{r}="Pending","ADD Scheduled",IF(H{r}="No","ADD Missed - Follow Up","Initial Prospect")))))))'
-            ws1[f"Q{r}"] = data[15]
-            ws1[f"R{r}"] = data[16]
-            ws1[f"S{r}"] = data[17]
+            ws1[f"Q{r}"] = encoded_recruit[15]
+            ws1[f"R{r}"] = encoded_recruit[16]
+            ws1[f"S{r}"] = encoded_recruit[17]
         else:
-            # Pre-formatted empty template row
+            # All other rows are left completely blank!
+            # The Recruit ID and Pipeline Stage formulas activate automatically as soon as a name is typed into Column B
             ws1[f"A{r}"] = f'=IF(B{r}="","","REC-"&TEXT({r}-8,"000"))'
+            ws1[f"B{r}"] = ""
+            ws1[f"C{r}"] = ""
+            ws1[f"D{r}"] = ""
+            ws1[f"E{r}"] = ""
+            ws1[f"F{r}"] = None
+            ws1[f"G{r}"] = None
+            ws1[f"H{r}"] = ""
+            ws1[f"I{r}"] = None
+            ws1[f"J{r}"] = ""
+            ws1[f"K{r}"] = None
+            ws1[f"L{r}"] = ""
+            ws1[f"M{r}"] = None
+            ws1[f"N{r}"] = None
+            ws1[f"O{r}"] = ""
             ws1[f"P{r}"] = f'=IF(B{r}="","",IF(L{r}="Yes","LMS Completed (Ready for Exam)",IF(L{r}="In Progress","LMS In Progress",IF(H{r}="Yes","ADD Attended - Awaiting LMS",IF(H{r}="Rescheduled","ADD Rescheduled",IF(H{r}="Pending","ADD Scheduled",IF(H{r}="No","ADD Missed - Follow Up","Initial Prospect")))))))'
+            ws1[f"Q{r}"] = ""
+            ws1[f"R{r}"] = None
+            ws1[f"S{r}"] = ""
 
         # Apply cell styling
         for col_letter, _, align, _ in headers:
@@ -405,7 +337,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
     ws2.row_dimensions[5].height = 24
 
     funnel_rows = [
-        (6, "1. Recruits Sourced", "='Recruit Monitoring Tracker'!B5", "100.0%", "Total candidates identified in pipeline"),
+        (6, "1. Recruits Sourced", "='Recruit Monitoring Tracker'!B5", "=IFERROR(B6/B6,1)", "Total candidates identified in pipeline"),
         (7, "2. Attended ADD", "='Recruit Monitoring Tracker'!F5", "=IFERROR(B7/B6,0)", "Completed Agency Discovery Day seminar"),
         (8, "3. Started LMS", '=COUNTIFS(\'Recruit Monitoring Tracker\'!L9:L65,"<>Not Started",\'Recruit Monitoring Tracker\'!L9:L65,"<>",\'Recruit Monitoring Tracker\'!B9:B65,"<>")', "=IFERROR(B8/B6,0)", "Candidate activated LMS & initiated training"),
         (9, "4. Completed LMS", "='Recruit Monitoring Tracker'!N5", "=IFERROR(B9/B6,0)", "Finished 100% of modules & certified"),
@@ -902,7 +834,7 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
             ("Attendance Rate %", "Calculates Attended ADD / Total Recruits Sourced. Benchmark target is >= 70%."),
             ("Completion Rate %", "Calculates Completed LMS / Attended ADD. Benchmark target is >= 60%."),
             ("Funnel Conversion %", "Calculates Completed LMS / Total Recruits Sourced. Benchmark target is >= 40%."),
-            ("Adding New Recruits", "Rows 24 to 65 are pre-formatted with all dropdowns, formulas, and borders. Simply start typing in Column B (Complete Name), and the entire row will activate automatically!"),
+            ("Adding New Recruits", "Rows 10 to 65 are pre-formatted with all dropdowns, formulas, and borders. Simply start typing in Column B (Complete Name), and the entire row will activate automatically!"),
         ]),
         ("4. BEST PRACTICES FOR RECRUITING SUCCESS", [
             ("The 24-Hour Rule", "Reach out to ADD attendees within 24 hours while interest is fresh to set up LMS credentials."),
