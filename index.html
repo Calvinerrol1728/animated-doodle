@@ -409,6 +409,7 @@
     <div class="tabs-nav">
       <button class="tab-btn active" onclick="switchTab('tracker')">Candidate Monitoring Tracker</button>
       <button class="tab-btn" onclick="switchTab('register')">📝 ADD Registration Form (Auto-Add)</button>
+      <button class="tab-btn" onclick="switchTab('recruiters')">👥 Recruiter IDs & Directory</button>
       <button class="tab-btn" onclick="switchTab('funnel')">Pipeline Funnel & Analytics</button>
       <button class="tab-btn" onclick="switchTab('guide')">User Guide & Column Definitions</button>
     </div>
@@ -747,8 +748,147 @@
 
       document.getElementById('view-tracker').style.display = tab === 'tracker' ? 'block' : 'none';
       document.getElementById('view-register').style.display = tab === 'register' ? 'block' : 'none';
+      if (document.getElementById('view-recruiters')) document.getElementById('view-recruiters').style.display = tab === 'recruiters' ? 'block' : 'none';
       document.getElementById('view-funnel').style.display = tab === 'funnel' ? 'block' : 'none';
       document.getElementById('view-guide').style.display = tab === 'guide' ? 'block' : 'none';
+
+      if (tab === 'recruiters') {
+        loadRecruiters();
+      }
+    }
+
+    let recruitersData = [];
+    async function loadRecruiters() {
+      try {
+        const res = await fetch('/api/recruiters');
+        recruitersData = await res.json();
+        renderRecruitersTable(recruitersData);
+      } catch (err) {
+        console.error("Failed to load recruiters:", err);
+      }
+    }
+
+    function renderRecruitersTable(list) {
+      const tbody = document.getElementById('recruitersTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      document.getElementById('recruiterCountBadge').textContent = `${list.length} Recruiters`;
+
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 2rem; color: #64748B;">No recruiters recorded yet. Use the form above to add your first recruiter ID.</td></tr>';
+        return;
+      }
+
+      list.forEach(r => {
+        let idBadge = '<span class="badge badge-slate">Pending</span>';
+        if (r.id_ref && r.id_ref.startsWith('/uploads/')) {
+          idBadge = `<a href="${r.id_ref}" target="_blank" style="background:#2563EB; color:white; padding:3px 8px; border-radius:4px; font-size:11px; text-decoration:none; font-weight:600;">👁️ View ID File</a>`;
+        } else if (r.id_ref) {
+          idBadge = `<span class="badge badge-yes">✓ ${r.id_ref}</span>`;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${r.id}</strong></td>
+          <td style="font-weight: 600;">${r.name}</td>
+          <td><a href="mailto:${r.email}" style="color: #2563EB; text-decoration: none;">${r.email}</a></td>
+          <td>${r.phone || '-'}</td>
+          <td>${r.unit || '-'}</td>
+          <td><code>${r.license || '-'}</code></td>
+          <td><span class="badge badge-slate">${r.status || 'Active'}</span></td>
+          <td style="text-align: center; font-weight: 700; color: #1E40AF;">${r.sourced || 0}</td>
+          <td style="text-align: center; font-weight: 700; color: #0284C7;">${r.attended || 0}</td>
+          <td>${idBadge}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function handleRecruiterSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSaveRecruiter');
+      btn.disabled = true;
+      btn.textContent = "Saving to Excel Workbook...";
+
+      const payload = {
+        id: document.getElementById('rec-id').value.trim(),
+        name: document.getElementById('rec-name').value.trim(),
+        email: document.getElementById('rec-email').value.trim(),
+        phone: document.getElementById('rec-phone').value.trim(),
+        unit: document.getElementById('rec-unit').value.trim(),
+        license: document.getElementById('rec-license').value.trim(),
+        gov_id: "Verified ID",
+        status: "Active"
+      };
+
+      const fileInput = document.getElementById('rec-file');
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = async function() {
+          payload.id_file_base64 = reader.result.split(',')[1];
+          payload.id_filename = file.name;
+          await submitRecruiterPayload(payload, btn);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        await submitRecruiterPayload(payload, btn);
+      }
+    }
+
+    async function submitRecruiterPayload(payload, btn) {
+      try {
+        const res = await fetch('/api/add-recruiter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.success) {
+          alert(`Success! Recruiter ${payload.name} (${payload.id}) has been added to Sheet 6: Recruiter Directory & IDs in Recruit_Monitoring_Tracker.xlsx!`);
+          document.getElementById('recruiterForm').reset();
+          await loadRecruiters();
+        } else {
+          alert("Error: " + result.error);
+        }
+      } catch (err) {
+        alert("Network error: " + err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "💾 Save Recruiter to Directory & Excel Sheet";
+      }
+    }
+
+    function handleRecruiterFileUpload(e) {
+      if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = async function() {
+          const payload = {
+            id: "AGT-" + Math.floor(100 + Math.random() * 900),
+            name: file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " "),
+            email: "recruiter@agency.com",
+            phone: "-",
+            unit: "Agency Unit",
+            license: "-",
+            gov_id: "Uploaded File",
+            status: "Active",
+            id_file_base64: reader.result.split(',')[1],
+            id_filename: file.name
+          };
+          const res = await fetch('/api/add-recruiter', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const result = await res.json();
+          if (result.success) {
+            alert(`ID File '${file.name}' successfully uploaded and linked to Recruiter Directory in Excel!`);
+            await loadRecruiters();
+          }
+        };
+        reader.readAsDataURL(file);
+      }
     }
 
     function copyRegisterLink() {

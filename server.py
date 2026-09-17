@@ -11,6 +11,8 @@ import email_service
 
 PORT = 8080
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+UPLOADS_DIR = os.path.join(DIRECTORY, "uploads", "recruiter_ids")
+os.makedirs(UPLOADS_DIR, exist_ok=True)
 
 def get_recruits_data():
     wb = openpyxl.load_workbook(os.path.join(DIRECTORY, "Recruit_Monitoring_Tracker.xlsx"), data_only=True)
@@ -62,6 +64,83 @@ def get_recruits_data():
             "notes": ws1[f"S{r}"].value or ""
         })
     return recruits
+
+def get_recruiters_data():
+    excel_path = os.path.join(DIRECTORY, "Recruit_Monitoring_Tracker.xlsx")
+    wb = openpyxl.load_workbook(excel_path, data_only=True)
+    if "Recruiter Directory & IDs" not in wb.sheetnames:
+        return []
+    ws = wb["Recruiter Directory & IDs"]
+    recruiters = []
+    for r in range(9, 40):
+        code = ws[f"A{r}"].value
+        name = ws[f"B{r}"].value
+        if not name or not str(name).strip():
+            continue
+        recruiters.append({
+            "row": r,
+            "id": code or f"AGT-{r-8:03d}",
+            "name": name,
+            "email": ws[f"C{r}"].value or "",
+            "phone": ws[f"D{r}"].value or "",
+            "unit": ws[f"E{r}"].value or "",
+            "license": ws[f"F{r}"].value or "",
+            "gov_id": ws[f"G{r}"].value or "",
+            "status": ws[f"H{r}"].value or "Active",
+            "date_added": str(ws[f"I{r}"].value or "")[:10],
+            "sourced": ws[f"J{r}"].value or 0,
+            "attended": ws[f"K{r}"].value or 0,
+            "lms_prog": ws[f"L{r}"].value or 0,
+            "lms_comp": ws[f"M{r}"].value or 0,
+            "id_ref": ws[f"N{r}"].value or "Pending Upload"
+        })
+    return recruiters
+
+def save_recruiter_to_excel(data):
+    excel_path = os.path.join(DIRECTORY, "Recruit_Monitoring_Tracker.xlsx")
+    wb = openpyxl.load_workbook(excel_path)
+    if "Recruiter Directory & IDs" not in wb.sheetnames:
+        import recruiter_directory
+        recruiter_directory.add_recruiter_directory_tab(wb)
+    ws = wb["Recruiter Directory & IDs"]
+
+    target_row = None
+    for r in range(9, 60):
+        val = ws[f"B{r}"].value
+        if not val or not str(val).strip():
+            target_row = r
+            break
+    if not target_row:
+        target_row = 36
+
+    code = data.get("id", "").strip() or f"AGT-{target_row-8:03d}"
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip()
+    phone = data.get("phone", "").strip()
+    unit = data.get("unit", "").strip() or "Financial Advisory Agency"
+    license_no = data.get("license", "").strip()
+    gov_id = data.get("gov_id", "").strip() or "Verified Agent ID"
+    status = data.get("status", "").strip() or "Active"
+    today_str = datetime.date.today().strftime("%Y-%m-%d")
+    id_ref = data.get("id_ref", "").strip() or "Uploaded & Recorded"
+
+    ws[f"A{target_row}"] = code
+    ws[f"B{target_row}"] = name
+    ws[f"C{target_row}"] = email
+    ws[f"D{target_row}"] = phone
+    ws[f"E{target_row}"] = unit
+    ws[f"F{target_row}"] = license_no
+    ws[f"G{target_row}"] = gov_id
+    ws[f"H{target_row}"] = status
+    ws[f"I{target_row}"] = today_str
+    ws[f"J{target_row}"] = f'=COUNTIF(\'Recruit Monitoring Tracker\'!$E$9:$E$65, "*{name}*")'
+    ws[f"K{target_row}"] = f'=COUNTIFS(\'Recruit Monitoring Tracker\'!$E$9:$E$65, "*{name}*", \'Recruit Monitoring Tracker\'!$H$9:$H$65, "Yes")'
+    ws[f"L{target_row}"] = f'=COUNTIFS(\'Recruit Monitoring Tracker\'!$E$9:$E$65, "*{name}*", \'Recruit Monitoring Tracker\'!$L$9:$L$65, "In Progress")'
+    ws[f"M{target_row}"] = f'=COUNTIFS(\'Recruit Monitoring Tracker\'!$E$9:$E$65, "*{name}*", \'Recruit Monitoring Tracker\'!$L$9:$L$65, "Yes")'
+    ws[f"N{target_row}"] = id_ref
+
+    wb.save(excel_path)
+    return {"success": True, "row": target_row, "id": code, "name": name}
 
 def register_recruit_to_excel(data):
     excel_path = os.path.join(DIRECTORY, "Recruit_Monitoring_Tracker.xlsx")
@@ -189,6 +268,14 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps(data).encode("utf-8"))
             return
+        elif parsed.path == "/api/recruiters":
+            data = get_recruiters_data()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps(data).encode("utf-8"))
+            return
         elif parsed.path == "/api/download-excel-base64":
             filepath = os.path.join(DIRECTORY, "Recruit_Monitoring_Tracker.xlsx")
             if os.path.exists(filepath):
@@ -237,6 +324,18 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
                 self.send_header("Content-Disposition", 'attachment; filename="ADD_Registration_Form.html"')
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+                return
+        elif parsed.path.startswith("/uploads/recruiter_ids/"):
+            filename = os.path.basename(parsed.path)
+            file_path = os.path.join(UPLOADS_DIR, filename)
+            if os.path.exists(file_path):
+                with open(file_path, "rb") as f:
+                    content = f.read()
+                self.send_response(200)
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.send_header("Content-Length", str(len(content)))
                 self.end_headers()
@@ -329,6 +428,51 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                     "message": f"Successfully registered {data.get('name')}! Assigned ID: {new_id}.",
                     "email": email_res
                 }).encode("utf-8"))
+            except Exception as e:
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "error": str(e)}).encode("utf-8"))
+            return
+
+        elif parsed.path == "/api/add-recruiter":
+            content_len = int(self.headers.get("Content-Length", 0))
+            post_body = self.rfile.read(content_len)
+            try:
+                data = json.loads(post_body.decode("utf-8"))
+            except Exception:
+                parsed_dict = urllib.parse.parse_qs(post_body.decode("utf-8"))
+                data = {k: v[0] for k, v in parsed_dict.items()}
+
+            if not data.get("name"):
+                self.send_response(400)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "error": "Recruiter name is required."}).encode("utf-8"))
+                return
+
+            # Check if an ID file was uploaded as base64
+            id_file_data = data.get("id_file_base64")
+            id_filename = data.get("id_filename")
+            if id_file_data and id_filename:
+                safe_name = f"{data.get('id', 'AGT')}_{os.path.basename(id_filename)}"
+                file_dest = os.path.join(UPLOADS_DIR, safe_name)
+                try:
+                    with open(file_dest, "wb") as f_out:
+                        f_out.write(base64.b64decode(id_file_data))
+                    data["id_ref"] = f"/uploads/recruiter_ids/{safe_name}"
+                except Exception as err:
+                    print("Error saving ID file:", err)
+
+            try:
+                res = save_recruiter_to_excel(data)
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": True, "recruiter": res}).encode("utf-8"))
             except Exception as e:
                 self.send_response(500)
                 self.send_header("Content-Type", "application/json")

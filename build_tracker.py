@@ -1238,6 +1238,10 @@ def create_recruit_workbook(filename="Recruit_Monitoring_Tracker.xlsx"):
     # Add 5th sheet: ADD Registration Form
     add_registration_form_tab(wb)
 
+    # Add 6th sheet: Recruiter Directory & IDs
+    import recruiter_directory
+    recruiter_directory.add_recruiter_directory_tab(wb)
+
     # Save workbook
     wb.save(filename)
     print(f"Workbook successfully saved to: {filename}")
